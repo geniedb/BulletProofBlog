@@ -5,7 +5,7 @@ class DemoAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields':['name','organization','email']}),
         ("Status Info", {'fields':['approved','launched','shutdown']}),
-        ("Cluster Info", {'fields':['east_coast_dns','west_coast_dns','private_key']})
+        ("Cluster Info", {'fields':['east_coast_dns','west_coast_dns']})
     ]
     list_display = ('__unicode__', 'approved','launched','shutdown')
     actions = ['approve', 'launch', 'shutdown']

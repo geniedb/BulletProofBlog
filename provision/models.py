@@ -4,9 +4,12 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.core.signing import Signer
+import boto
+import boto.ec2
 from tailor.tinc import Tinc
 from tailor.cloudfabric import Cloudfabric
 from argparse import ArgumentParser
+from time import sleep
 
 DEMO_MESSAGE = """Your CloudFabric Demo has been approved
 
@@ -22,9 +25,10 @@ class Demo(models.Model):
     approved = models.DateTimeField("Approved", null=True, blank=True)
     launched = models.DateTimeField("Launched", null=True, blank=True)
     shutdown = models.DateTimeField("Shutdown", null=True, blank=True)
+    east_coast_instance = models.CharField("East Coast Instance ID", max_length=200, default="", blank=True)
+    west_coast_instance = models.CharField("West Coast Instance ID", max_length=200, default="", blank=True)
     east_coast_dns = models.CharField("East Coast Server DNS Address", max_length=200, default="", blank=True)
     west_coast_dns = models.CharField("West Coast Server DNS Address", max_length=200, default="", blank=True)
-    private_key = models.CharField("Private Key", max_length=2000, default="", blank=True)
 
     def __unicode__(self):
         return "{name} ({organization}) <{email}>".format(name=self.name, organization=self.organization, email=self.email)
@@ -49,15 +53,42 @@ class Demo(models.Model):
 
     def do_launch(self):
         self.launched = timezone.now()
-        #Provision
-        self.east_coast_dns = "dns"
-        self.west_coast_dns = "dns2"
-        self.private_key = "--PRIVATE KEY--"
+
+        # Provision Servers
+        east_con = boto.connect_ec2()
+        west_con = boto.ec2.regions()[4].connect()
+        east_res = east_con.run_instances(
+            'ami-fa4ace93',
+            key_name='generic-geniedb-demo',
+            instance_type='m1.small',
+            security_groups=['generic-geniedb-demo']
+        )
+        east_instance = east_res.instances[0]
+        west_res = west_con.run_instances(
+            'ami-682da458',
+            key_name='generic-geniedb-demo',
+            instance_type='m1.small',
+            security_groups=['generic-geniedb-demo']
+        )
+        west_instance = west_res.instances[0]
         properties={
             'use_tinc':'true',
             'netname':'cf',
-            'key':'keyfile'
+            'transport':'tcp',
+            'key':'generic-geniedb-demo.pem'
         }
+
+        # Wait for nodes to come up
+        while east_instance.update() == 'pending' or west_instance.update() == 'pending':
+            sleep(30)
+        east_instance.add_tag("Name", "east-generic-noel")
+        west_instance.add_tag("Name", "west-generic-noel")
+        self.west_coast_instance = west_instance.id
+        self.west_coast_dns = west_instance.public_dns_name
+        self.east_coast_instance = east_instance.id
+        self.east_coast_dns = east_instance.public_dns_name
+
+        # Install CloudFabric
         parser = ArgumentParser()
         subparsers = parser.add_subparsers()
         Tinc.setup_argparse(subparsers.add_parser('tinc'))
