@@ -17,7 +17,7 @@ def launch(req, demo_id):
     demo_id=Signer().unsign(demo_id)
     d = get_object_or_404(Demo, pk=demo_id)
     if d.launchable() and req.method == 'POST':
-        d.launch()
+        d.do_launch()
     if d.launched is not None:
         return render(req,'provision/launched.html', {'demo': d})
     else:

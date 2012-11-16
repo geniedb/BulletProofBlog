@@ -12,19 +12,19 @@ class Demo(models.Model):
     east_coast_dns = models.CharField(max_length=200, default="", blank=True)
     west_coast_dns = models.CharField(max_length=200, default="", blank=True)
     private_key = models.CharField(max_length=2000, default="", blank=True)
+
     def __unicode__(self):
         return "{name} ({organization}) <{email}>".format(name=self.name, organization=self.organization, email=self.email)
-    
     def due_to_shudown(self):
         return self.launched <= timezone.now() - datetime.timedelta(hours=1)
-    
+
     def launchable(self):
         return self.approved is not None and self.launched is None
-    
-    def approve(self):
+
+    def do_approve(self):
         self.approved = timezone.now()
-    
-    def launch(self):
+
+    def do_launch(self):
         self.launched = timezone.now()
         #Launch The cluster!
         self.east_coast_dns = "dns"
