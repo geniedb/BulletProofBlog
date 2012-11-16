@@ -13,15 +13,15 @@ GenieDB
 """
 
 class Demo(models.Model):
-    name = models.CharField(max_length=200)
-    organization = models.CharField(max_length=200)
-    email = models.EmailField()
+    name = models.CharField("Name", max_length=200)
+    organization = models.CharField("Organization", max_length=200)
+    email = models.EmailField("E-mail")
     approved = models.DateTimeField("Approved", null=True, blank=True)
     launched = models.DateTimeField("Launched", null=True, blank=True)
     shutdown = models.DateTimeField("Shutdown", null=True, blank=True)
-    east_coast_dns = models.CharField(max_length=200, default="", blank=True)
-    west_coast_dns = models.CharField(max_length=200, default="", blank=True)
-    private_key = models.CharField(max_length=2000, default="", blank=True)
+    east_coast_dns = models.CharField("East Coast Server DNS Address", max_length=200, default="", blank=True)
+    west_coast_dns = models.CharField("West Coast Server DNS Address", max_length=200, default="", blank=True)
+    private_key = models.CharField("Private Key", max_length=2000, default="", blank=True)
 
     def __unicode__(self):
         return "{name} ({organization}) <{email}>".format(name=self.name, organization=self.organization, email=self.email)
