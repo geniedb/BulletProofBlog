@@ -13,7 +13,7 @@ def request(req):
         return render(req, 'provision/request.html')
     d.save()
     mail_admins("New Demo Request", "{demo} has requested a demo.".format(demo=d))
-    return HttpResponseRedirect('launch/'+Signer().sign(d.pk))
+    return HttpResponseRedirect(d.get_absolute_url())
 
 def launch(req, demo_id):
     demo_id=Signer().unsign(demo_id)
