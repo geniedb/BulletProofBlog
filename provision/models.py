@@ -31,3 +31,8 @@ class Demo(models.Model):
         self.west_coast_dns = "dns2"
         self.private_key = "--PRIVATE KEY--"
         self.save()
+
+    def do_shutdown(self):
+        self.shutdown = timezone.now()
+        #Shutdown the cluster
+        self.save()
