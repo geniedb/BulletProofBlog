@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="stylized">
+<form method="post">
+	<p>Sign up here for a demonstration CloudFabric cluster. You will get a two node cluster for one hour.</p> 
+    {% csrf_token %}
+    <label for="name">Name<span class="small">Your name</span></label>
+    <input id="name" name="name" />
+
+    <label for="organization">Organization<span class="small">The organization you work for</span></label>
+    <input id="organization" name="organization" />
+
+    <label for="email">E-mail<span class="small">An email address we can reach you at</span></label>
+    <input id="email" name="email" />
+    
+    <input type="submit" value="Request Demo">
+	<div class="spacer"></div>
+</form>
+</div>
+{% endblock %}

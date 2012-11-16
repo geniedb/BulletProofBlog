@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+{{ demo }} <br />
+{% if demo.launchable %}
+<div class="stylized">
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Launch Your Demo" />
+	<div class="spacer"></div>
+</form>
+</div>
+{% else %}
+<p>Your demo is awaiting approval.<p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,91 @@
+<html>
+<head>
+	<link rel="shortcut icon" href="data:image/ico;base64,AAABAAEAICAQAAEABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAEADgoGAB0UEgA0IxsAXDstAIZYQwCfX0cAl2pYAL5/ZADehmIA8ZVuAOaXdwDsp4oA/KiDAP+6mAAAAAAAAAAAABAQEQAQAAAAAAEAARAQEBAAAQABAQEBAQAQEAAAAAAAABAAAQAAAAABEAABEREREREBEQABERERAAAQABAAAAAAAAAAAQAAAAAAEAEAAAAAAREQAQAAAAABEAAABmZmZmZBEBAAZmZmZmQgERqpqZqamYEBAKmpmqmZqRAKkyIiI2qZEAGpMSIhNZlgCqMAAAAEmkEAqhEQEQFpoRqjARARAIqAEaogAAABKqMKowAAABFLkAG6EAAQAAqzGqMBABAAOpAA2hEREBEaoxqzABEBETuxAasgAAABSrEdswEQAAA6sAC9EAAAEbuBDdMAABARPbAB2oiIiL29MA3TAAEQED2wENzd3b3d1AAd0wEAAQE8sAHdIRERKN0gHsMQAAAAPbAQ7REBAAC8UQ7TAQERET3AAd4gEAEQfIAO4wABAABNwADuEQARAE3ADuMREQAAjsER7iAQEAFesA7jEAAABO1QAO4RAREBznAO4wEBEl7sAQDuIBEBJ+5ADu7u7u7uwgEB7u7u7u7oAQ7MzMzMcwAAAMzMzMzIIAABAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAEREREREREREREREREREREQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" />
+	<style type="text/css">
+		* {
+			font-family: verdana, sans;
+		}
+
+		body {
+			margin: 0;
+		}
+
+		h1 {
+			background-color: black;
+			color: white;
+			padding: 10pt;
+			vertical-align: middle;
+		}
+body{
+font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+font-size:12px;
+}
+p, h1, form, button{border:0; margin:0; padding:0;}
+.spacer{clear:both; height:1px;}
+.stylized{
+border:solid 2px #b7ddf2;
+background:#ebf4fb;
+margin:14px auto 0 auto;
+width:400px;
+padding:14px;
+}
+.stylized h1 {
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+.stylized p{
+font-size:11px;
+color:#666666;
+margin-bottom:20px;
+border-bottom:solid 1px #b7ddf2;
+padding-bottom:10px;
+}
+.stylized label{
+display:block;
+font-weight:bold;
+text-align:right;
+width:140px;
+float:left;
+}
+.stylized .small{
+color:#666666;
+display:block;
+font-size:11px;
+font-weight:normal;
+text-align:right;
+width:140px;
+}
+.stylized input{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 20px 10px;
+}
+.stylized button{
+clear:both;
+margin-left:150px;
+width:125px;
+height:31px;
+background:#666666 url(img/button.png) no-repeat;
+text-align:center;
+line-height:31px;
+color:#FFFFFF;
+font-size:11px;
+font-weight:bold;
+}
+	</style>
+	<title>CloudFabric {% block title %}Demo{% endblock %}</title>
+</head>
+<body>
+<h1>
+	<img src="http://www.geniedb.com/wp-content/themes/genie-db/images/genie-db.png" alt="GenieDB"/>
+	<span> CloudFabric Demo</span>
+</h1>
+<div>
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>
