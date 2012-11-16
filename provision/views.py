@@ -20,10 +20,14 @@ def launch(req, demo_id):
     d = get_object_or_404(Demo, pk=demo_id)
     if d.launchable() and req.method == 'POST':
         d.do_launch()
-    if d.launched is not None:
-        return render(req,'provision/launched.html', {'demo': d})
-    else:
+    if d.shutdown is not None:
+        return render(req,'provision/shutdown.html', {'demo': d})
+    elif d.launched is not None:
+        return render(req,'provision/running.html', {'demo': d})
+    elif d.approved is not None:
         return render(req,'provision/launch.html', {'demo': d})
+    else:
+        return render(req,'provision/awaiting_approval.html', {'demo': d})
 
 def shutdown_old(req):
     # doesn't require perms

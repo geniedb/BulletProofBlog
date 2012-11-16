@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<p>{{ demo }}</p>
+<h2>Congratulations, your demo has been launched</h2>
 
-<p>Congratulations, your demo has been launched.</p>
-
-<p>
+<div class="stylized">
+<h3>Cluster Info</h3>
 East coast host: {{ demo.east_coast_dns }}<br />
 West coast host: {{ demo.west_coast_dns }}<br />
 Private Key:<br />{{ demo.private_key }}<br />
-</p>
+</div>
+
+<h3>Getting Started<h3>
+<p>...</p>
 {% endblock %}

@@ -22,10 +22,13 @@ font-size:12px;
 }
 p, h1, form, button{border:0; margin:0; padding:0;}
 .spacer{clear:both; height:1px;}
+#content {
+margin: 14px;
+}
 .stylized{
 border:solid 2px #b7ddf2;
 background:#ebf4fb;
-margin:14px auto 0 auto;
+margin:0 auto;
 width:400px;
 padding:14px;
 }
@@ -84,7 +87,7 @@ font-weight:bold;
 	<img src="http://www.geniedb.com/wp-content/themes/genie-db/images/genie-db.png" alt="GenieDB"/>
 	<span> CloudFabric Demo</span>
 </h1>
-<div>
+<div id="content">
 {% block content %}{% endblock %}
 </div>
 </body>
