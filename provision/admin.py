@@ -1,6 +1,5 @@
 from provision.models import Demo
 from django.contrib import admin
-from django.utils import timezone
 
 class DemoAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -9,9 +8,18 @@ class DemoAdmin(admin.ModelAdmin):
         ("Cluster Info", {'fields':['east_coast_dns','west_coast_dns','private_key']})
     ]
     list_display = ('approved','launched','shutdown')
-    actions = ['approve']
+    actions = ['approve', 'launch', 'shutdown']
 
     def approve(self, request, queryset):
-        queryset.update(approved=timezone.now())
+        for d in queryset:
+            d.do_approve()
+
+    def launch(self, request, queryset):
+        for d in queryset:
+            d.do_launch()
+
+    def shutdown(self, request, queryset):
+        for d in queryset:
+            d.do_shutdown()
 
 admin.site.register(Demo, DemoAdmin)
