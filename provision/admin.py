@@ -7,7 +7,7 @@ class DemoAdmin(admin.ModelAdmin):
         ("Status Info", {'fields':['approved','launched','shutdown']}),
         ("Cluster Info", {'fields':['east_coast_dns','west_coast_dns','private_key']})
     ]
-    list_display = ('approved','launched','shutdown')
+    list_display = ('__unicode__', 'approved','launched','shutdown')
     actions = ['approve', 'launch', 'shutdown']
 
     def approve(self, request, queryset):
