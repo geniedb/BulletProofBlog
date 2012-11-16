@@ -3,6 +3,7 @@
 	<name>GenieDemo</name>
 	<comment></comment>
 	<projects>
+		<project>tinc-tailor</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

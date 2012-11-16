@@ -4,6 +4,9 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.core.signing import Signer
+from tailor.tinc import Tinc
+from tailor.cloudfabric import Cloudfabric
+from argparse import ArgumentParser
 
 DEMO_MESSAGE = """Your CloudFabric Demo has been approved
 
@@ -46,10 +49,28 @@ class Demo(models.Model):
 
     def do_launch(self):
         self.launched = timezone.now()
-        #Launch The cluster!
+        #Provision
         self.east_coast_dns = "dns"
         self.west_coast_dns = "dns2"
         self.private_key = "--PRIVATE KEY--"
+        properties={
+            'use_tinc':'true',
+            'netname':'cf',
+            'key':'keyfile'
+        }
+        parser = ArgumentParser()
+        subparsers = parser.add_subparsers()
+        Tinc.setup_argparse(subparsers.add_parser('tinc'))
+        Cloudfabric.setup_argparse(subparsers.add_parser('cloudfabric'))
+        for m,n in ((Tinc,'tinc'), (Cloudfabric,'cloudfabric')):
+            params = parser.parse_args([n, 'install'])
+            params.hosts = {
+                'east': {'connect_to':self.east_coast_dns},
+                'west': {'connect_to':self.west_coast_dns}
+            }
+            params.hosts['west'].update(properties)
+            params.hosts['east'].update(properties)
+            m(params, properties).run()
         self.save()
 
     def do_shutdown(self):
