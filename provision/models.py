@@ -88,6 +88,7 @@ class Demo(models.Model):
         self.west_coast_dns = west_instance.public_dns_name
         self.east_coast_instance = east_instance.id
         self.east_coast_dns = east_instance.public_dns_name
+        self.save()
 
         # Install CloudFabric
         parser = ArgumentParser()
@@ -103,7 +104,6 @@ class Demo(models.Model):
             params.hosts['west'].update(properties)
             params.hosts['east'].update(properties)
             m(params, properties).run()
-        self.save()
 
     def do_shutdown(self):
         self.shutdown = timezone.now()
