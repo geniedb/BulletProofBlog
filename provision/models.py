@@ -51,12 +51,14 @@ class Demo(models.Model):
                   [self.email])
         self.save()
 
+    def get_ec2_connections(self):
+        return( boto.connect_ec2(), boto.ec2.regions()[4].connect())
+
     def do_launch(self):
         self.launched = timezone.now()
 
         # Provision Servers
-        east_con = boto.connect_ec2()
-        west_con = boto.ec2.regions()[4].connect()
+        (east_con, west_con) = self.get_ec2_connections()
         east_res = east_con.run_instances(
             'ami-fa4ace93',
             key_name='generic-geniedb-demo',
@@ -106,5 +108,7 @@ class Demo(models.Model):
 
     def do_shutdown(self):
         self.shutdown = timezone.now()
-        #Shutdown the cluster
+        (east_con, west_con) = self.get_ec2_connections()
+        east_con.terminate_instances([self.east_coast_instance])
+        west_con.terminate_instances([self.west_coast_instance])
         self.save()
