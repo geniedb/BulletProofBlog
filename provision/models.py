@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.core.signing import Signer
-import boto
 import boto.ec2
 from tailor.tinc import Tinc
 from tailor.cloudfabric import Cloudfabric
