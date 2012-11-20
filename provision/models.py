@@ -9,6 +9,7 @@ from tailor.tinc import Tinc
 from tailor.cloudfabric import Cloudfabric
 from argparse import ArgumentParser
 from time import sleep
+from django.conf import settings
 
 DEMO_MESSAGE = """Your CloudFabric Demo has been approved
 
@@ -59,25 +60,19 @@ class Demo(models.Model):
         # Provision Servers
         (east_con, west_con) = self.get_ec2_connections()
         east_res = east_con.run_instances(
-            'ami-fa4ace93',
-            key_name='generic-geniedb-demo',
-            instance_type='m1.small',
-            security_groups=['generic-geniedb-demo']
+            settings.EAST_AMI,
+            key_name=settings.EAST_KEY_NAME,
+            instance_type=settings.EAST_SIZE,
+            security_groups=settings.EAST_SECURITY_GROUPS
         )
         east_instance = east_res.instances[0]
         west_res = west_con.run_instances(
-            'ami-682da458',
-            key_name='generic-geniedb-demo',
-            instance_type='m1.small',
-            security_groups=['generic-geniedb-demo']
+            settings.EAST_AMI,
+            key_name=settings.WEST_KEY_NAME,
+            instance_type=settings.WEST_SIZE,
+            security_groups=settings.WEST_SECURITY_GROUPS
         )
         west_instance = west_res.instances[0]
-        properties={
-            'use_tinc':'true',
-            'netname':'cf',
-            'transport':'tcp',
-            'key':'generic-geniedb-demo.pem'
-        }
 
         # Wait for nodes to come up
         while east_instance.update() == 'pending' or west_instance.update() == 'pending':
@@ -91,6 +86,13 @@ class Demo(models.Model):
         self.save()
 
         # Install CloudFabric
+        properties={
+            'use_tinc':'true',
+            'netname':'cf',
+            'transport':'tcp',
+            'hosts_dir': settings.HOSTS_DIR+self.pk,
+            'key': settings.KEY_FILE
+        }
         parser = ArgumentParser()
         subparsers = parser.add_subparsers()
         Tinc.setup_argparse(subparsers.add_parser('tinc'))

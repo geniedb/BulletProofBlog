@@ -20,6 +20,17 @@ DATABASES = {
     }
 }
 
+EAST_AMI = 'ami-293dba40'
+EAST_KEY_NAME = 'generic-geniedb-demo'
+EAST_SIZE = 'm1.small'
+EAST_SECURITY_GROUPS = ['genieric-geniedb-demo']
+WEST_AMI = 'ami-36dd5506'
+WEST_KEY_NAME = EAST_KEY_NAME
+WEST_SIZE = EAST_SIZE
+WEST_SECURITY_GROUPS = EAST_SECURITY_GROUPS
+KEY_FILE = 'generic-geniedb-demo.pem'
+HOSTS_DIR = '/tmp/hosts'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
