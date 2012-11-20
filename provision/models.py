@@ -67,7 +67,7 @@ class Demo(models.Model):
         )
         east_instance = east_res.instances[0]
         west_res = west_con.run_instances(
-            settings.EAST_AMI,
+            settings.WEST_AMI,
             key_name=settings.WEST_KEY_NAME,
             instance_type=settings.WEST_SIZE,
             security_groups=settings.WEST_SECURITY_GROUPS
@@ -90,7 +90,7 @@ class Demo(models.Model):
             'use_tinc':'true',
             'netname':'cf',
             'transport':'tcp',
-            'hosts_dir': settings.HOSTS_DIR+self.pk,
+            'hosts_dir': settings.HOSTS_DIR+str(self.pk),
             'key': settings.KEY_FILE
         }
         parser = ArgumentParser()
