@@ -12,7 +12,8 @@ $(function() {
 
 {% block content %}
 <div class="stylized">
-<h3>Your demo is ready. After you launch, the demo will be available for one hour.<h3>
+<h3>Your demo is ready. After you launch, the demo will be available for one
+hour. Launching may take several minutes, how about a cup of tea?<h3>
 <form method="post">
     {% csrf_token %}
     <input id="launch" type="submit" value="Launch Your Demo" />

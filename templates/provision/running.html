@@ -3,12 +3,40 @@
 <h2>Congratulations, your demo has been launched</h2>
 
 <div class="stylized">
-<h3>Cluster Info</h3>
-East coast host: {{ demo.east_coast_dns }}<br />
-West coast host: {{ demo.west_coast_dns }}<br />
-Private Key:<br />{{ demo.private_key }}<br />
+<h3>Your Cluster Info</h3>
+East coast node: {{ demo.east_coast_dns }}<br />
+West coast node: {{ demo.west_coast_dns }}<br />
 </div>
 
 <h3>Getting Started<h3>
-<p>...</p>
+<p>You can use the following SSH private key to log in to your two servers:
+<pre>-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAgzQsQ5tnHb3kPv3aRNW22P+NAJyOd1ySvF9KvVxdE9TDV8tqficKIO8R3FLA
+bW0VPGeXduX1+U/k8sJmnLQI8x4oeoOVC/PGiSdVaQW7YBuYN5wDdwuSIuzfv7arRxihGg5rcAAd
+xsiRYqQiWCGkHH4xFlsgVmVFkvr42puDflrfyk1QkZEAM1fMbI5qkY7V1qd5GM9I7I3ziZELdUYy
++i2+pPgB3SxtKCESydW1eKeD9cXWwJrxN7d1+tfzItI5sTQOslMlfIjBNASxyI3Pe38vICvBnAVo
+zRPt1CRSd4ydrOx0NyCzC7Jl2n/LoKll+OVnr6qlaT3qvVmy3fp2FQIDAQABAoIBABi/GW4y/HL+
+ovNCnA2JpbAuGyE3ZiObQU3oR0eKCUA5TBLeGhrrMBzgGqVMsmCxR2UaQNY7L3aznAIxqnr59gos
+8QOSl+UmOJcb5R8m5p2M9tveQEUO2KRfuyAEyy9gtNoeSCNa0kLxB4LsZFHtHnAFWSrXSzUgasv7
+LD7HQDjvk0zdewyfwdtK0f6IgyloIxZl26P9d8IAcviTAeBBQWvGY45idR2sku1u70Wpb/PqW3r3
+rH3DLNadOuCCdj7tII927JtGnRiKcfh2z7vDbO5kDCYtcVXY7gkTpGAbNAUQYwJWI7ozcJEvWJjV
+MVBmYeUodxT+9rSv6EI6rMIhiC0CgYEAzsEaxoaEyQIKGDmKZlqrxFo8psB46Cp/ocRJgAvbcg2S
+G3X+8HijDXg/0cqGV2vMVVONNFbJvcy75i3tVl1+0c9olu1/vjJGYC0RhyYlJz8T2Jh3wp2Ccq/M
+uFywHJ+I3mBtvcMgaHgwp5NnJPeYSTLpQdN6kkZmHfuCJQ8YzfcCgYEAonRbZwUWT/C8SnyRdBKI
+wtvPXo6TUBjj0ov5emc4D788UmBoep54QS48fSX7b8AOVBI4Jgn6Eg7XVEjRs/VTFcYtjOOjXlxZ
+UMAv8noVI4yG9FEzugCOb/Pyc/RtubNj8fDzzrKldfOK0aNdcpUbwFpTSrcDCTkdU08mVg9eCVMC
+gYBujK4mbJLfb6m6Hjo0VFL3oFBB0TRU3zRzaKLsRmrF5x+yczsnlTmJ4DwvjpyabddJ4GzmCWnB
+hJELmI8I2OEQilggK0lch0E995shqnG/NGkGLTAL7XBspjdOdLDt/ReP3/uNtaHEek95qsVB7OmO
+ahxyyAMH54B+k5aY/iODLQKBgDPmKmEyHduyE+VUAH/tf+WIpaoWsHdRTE8ySqRRH3bgaFwE0rwB
+rndcVxTAMqCT4b/4BhoY69wjA6W4kc4FHOMC6gBtpP57UElc7LRxThmKRn79BiJxFRAtBhMHTpqZ
+9d8QVEN/jR6ujHXG1A7MFg6QjLV83CpxJa48xgmOZUNjAoGADObXdlyKSn47tIdGv7RDhMSEBaEd
+TEXoSOTQawcCXcxk9XxdWP5MZDDdeP2z8jvA7yLZn2ADAbBIZ+BQgik/6+hQE+q63PwdjV+tRocX
+xm1PNEg/IRtCVPvrGvtJikyj2pu02knroFrvkYwLAqF2IyOgXewb6iR4Ayx3bYpMkJI=
+-----END RSA PRIVATE KEY-----</pre>
+</p>
+<p>The running MySQL instance has a "GenieDB" storage engine. If you create a
+table like <tt>CREATE TABLE test.t1 (id INT) ENGINE=GenieDB</tt> the table and
+all it's contents will be replicated between your two nodes using GenieDB
+CloudFabric.</p>
+
 {% endblock %}
