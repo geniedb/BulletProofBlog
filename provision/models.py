@@ -78,7 +78,11 @@ class Demo(models.Model):
         while east_instance.update() == 'pending' or west_instance.update() == 'pending':
             sleep(30)
         east_instance.add_tag("Name", "east-generic-noel")
+        east_instance.add_tag("Started For", str(self)[:255])
+        east_instance.add_tag("Demo ID", str(self.pk))
         west_instance.add_tag("Name", "west-generic-noel")
+        west_instance.add_tag("Started For", str(self)[:255])
+        west_instance.add_tag("Demo ID", str(self.pk))
         self.west_coast_instance = west_instance.id
         self.west_coast_dns = west_instance.public_dns_name
         self.east_coast_instance = east_instance.id
