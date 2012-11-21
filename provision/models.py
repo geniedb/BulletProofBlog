@@ -66,6 +66,9 @@ class Demo(models.Model):
             security_groups=settings.EAST_SECURITY_GROUPS
         )
         east_instance = east_res.instances[0]
+        self.east_coast_instance = east_instance.id
+        self.east_coast_dns = east_instance.public_dns_name
+        self.save()
         west_res = west_con.run_instances(
             settings.WEST_AMI,
             key_name=settings.WEST_KEY_NAME,
@@ -73,6 +76,9 @@ class Demo(models.Model):
             security_groups=settings.WEST_SECURITY_GROUPS
         )
         west_instance = west_res.instances[0]
+        self.west_coast_instance = west_instance.id
+        self.west_coast_dns = west_instance.public_dns_name
+        self.save()
 
         # Wait for nodes to come up
         while east_instance.update() == 'pending' or west_instance.update() == 'pending':
@@ -83,11 +89,6 @@ class Demo(models.Model):
         west_instance.add_tag("Name", "west-generic-noel")
         west_instance.add_tag("Started For", str(self)[:255])
         west_instance.add_tag("Demo ID", str(self.pk))
-        self.west_coast_instance = west_instance.id
-        self.west_coast_dns = west_instance.public_dns_name
-        self.east_coast_instance = east_instance.id
-        self.east_coast_dns = east_instance.public_dns_name
-        self.save()
 
         # Install CloudFabric
         properties={
