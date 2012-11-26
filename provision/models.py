@@ -102,8 +102,8 @@ class Demo(models.Model):
         subparsers = parser.add_subparsers()
         Tinc.setup_argparse(subparsers.add_parser('tinc'))
         Cloudfabric.setup_argparse(subparsers.add_parser('cloudfabric'))
-        for m,n in ((Tinc,'tinc'), (Cloudfabric,'cloudfabric')):
-            params = parser.parse_args([n, 'install'])
+        for m,n in ((Tinc,['tinc','install']), (Cloudfabric,['cloudfabric','refresh'])):
+            params = parser.parse_args(n)
             params.hosts = {
                 'east': {'connect_to':self.east_coast_dns},
                 'west': {'connect_to':self.west_coast_dns}
