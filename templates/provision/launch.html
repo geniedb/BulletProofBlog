@@ -2,9 +2,11 @@
 {% block headextra %}
 <script type="text/javascript">
 $(function() {
-	$("#launch").on("click", function() {
-		$(this).attr("disabled","disabled");
+	$("#launch").on("click", function(e) {
+		e.preventDefault();
+		$(this).prop("disabled",true);
 		$(this).val("Launching...");
+		$("#launchform").submit();
 	});
 });
 </script>
@@ -14,7 +16,7 @@ $(function() {
 <div class="stylized">
 <h3>Your demo is ready. After you launch, the demo will be available for one
 hour. Launching may take several minutes, how about a cup of tea?<h3>
-<form method="post">
+<form id="launchform" method="post">
     {% csrf_token %}
     <input id="launch" type="submit" value="Launch Your Demo" />
 	<div class="spacer"></div>
