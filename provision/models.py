@@ -56,6 +56,7 @@ class Demo(models.Model):
 
     def do_launch(self):
         self.launched = timezone.now()
+        self.shutdown = None
 
         # Provision Servers
         (east_con, west_con) = self.get_ec2_connections()
