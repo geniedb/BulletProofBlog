@@ -35,7 +35,7 @@ class Demo(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('provision.views.launch', [Signer().sign(self.pk)])
+        return ('provision.views.demo', [Signer().sign(self.pk)])
 
     def due_to_shudown(self):
         return self.launched <= timezone.now() - datetime.timedelta(hours=1)
@@ -113,6 +113,81 @@ class Demo(models.Model):
             params.hosts['west'].update(properties)
             params.hosts['east'].update(properties)
             m(params, properties).run()
+
+    def node_info(self, coast):
+        if coast == 'east':
+            dns = self.east_coast_dns
+            instance = self.east_coast_instance
+        elif coast == 'west':
+            dns = self.east_coast_dns
+            instance = self.east_coast_instance
+        else:
+            raise KeyError()
+        properties={
+            'use_tinc':'true',
+            'netname':'cf',
+            'transport':'tcp',
+            'hosts_dir': settings.HOSTS_DIR+str(self.pk),
+            'key': settings.KEY_FILE
+        }
+        parser = ArgumentParser()
+        subparsers = parser.add_subparsers()
+        Cloudfabric.setup_argparse(subparsers.add_parser('cloudfabric'))
+        params = parser.parse_args(['cloudfabric', 'status', coast])
+        params.hosts = {
+            'east': {'connect_to':self.east_coast_dns},
+            'west': {'connect_to':self.west_coast_dns}
+        }
+        params.hosts['west'].update(properties)
+        params.hosts['east'].update(properties)
+        return {
+                'coast': coast,
+                'dns': dns,
+                'instance': instance,
+                'status': Cloudfabric(params, properties).run()
+            }
+        
+
+    def do_start(self, coast):
+        properties={
+            'use_tinc':'true',
+            'netname':'cf',
+            'transport':'tcp',
+            'hosts_dir': settings.HOSTS_DIR+str(self.pk),
+            'key': settings.KEY_FILE
+        }
+        parser = ArgumentParser()
+        subparsers = parser.add_subparsers()
+        Cloudfabric.setup_argparse(subparsers.add_parser('cloudfabric'))
+        params = parser.parse_args(['cloudfabric', 'start', coast])
+        params.hosts = {
+            'east': {'connect_to':self.east_coast_dns},
+            'west': {'connect_to':self.west_coast_dns}
+        }
+        params.hosts['west'].update(properties)
+        params.hosts['east'].update(properties)
+        Cloudfabric(params, properties).run()
+
+
+    def do_stop(self, coast):
+        properties={
+            'use_tinc':'true',
+            'netname':'cf',
+            'transport':'tcp',
+            'hosts_dir': settings.HOSTS_DIR+str(self.pk),
+            'key': settings.KEY_FILE
+        }
+        parser = ArgumentParser()
+        subparsers = parser.add_subparsers()
+        Cloudfabric.setup_argparse(subparsers.add_parser('cloudfabric'))
+        params = parser.parse_args(['cloudfabric', 'stop', coast])
+        params.hosts = {
+            'east': {'connect_to':self.east_coast_dns},
+            'west': {'connect_to':self.west_coast_dns}
+        }
+        params.hosts['west'].update(properties)
+        params.hosts['east'].update(properties)
+        Cloudfabric(params, properties).run()
 
     def do_shutdown(self):
         self.shutdown = timezone.now()
