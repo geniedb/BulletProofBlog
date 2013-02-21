@@ -118,6 +118,7 @@ class Node(models.Model):
             self.health_check,
             settings.DNS_TEMPLATE.format(demo_id=self.demo.pk),
             'A',
+            ttl=30,
             identifier=self.instance_id,
             weight=1,
             resource_records=[self.ip]
