@@ -30,6 +30,7 @@ WEST_SIZE = EAST_SIZE
 WEST_SECURITY_GROUPS = EAST_SECURITY_GROUPS
 KEY_FILE = 'generic-geniedb-demo.pem'
 HOSTS_DIR = '/tmp/hosts'
+ROUTE53_HOSTED_ZONE='Z13SNCNW12N6M3'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

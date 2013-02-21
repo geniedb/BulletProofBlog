@@ -5,11 +5,15 @@ from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.core.signing import Signer
 import boto.ec2
+import boto.route53
+import boto.route53.record
+import re
 from tailor.tinc import Tinc
 from tailor.cloudfabric import Cloudfabric
 from argparse import ArgumentParser
 from time import sleep
 from django.conf import settings
+from GenieDemo.settings import ROUTE53_HOSTED_ZONE
 
 DEMO_MESSAGE = """Your CloudFabric Demo has been approved
 
@@ -18,6 +22,48 @@ Please visit http://{domain}{path} to launch your demo.
 GenieDB
 """
 
+class R53RecordWithHealthCheck(boto.route53.record.Record):
+    def __init__(self, health_check_id, *args, **kwargs):
+        super(R53RecordWithHealthCheck,self).__init__( *args, **kwargs)
+        self.health_check_id = health_check_id
+
+    def to_xml(self):
+        out = super(R53RecordWithHealthCheck,self).to_xml()
+        return re.sub('</ResourceRecordSet>',
+                      '<HealthCheckId>{0}</HealthCheckId></ResourceRecordSet>'.format(self.health_check_id),
+                      out)
+
+def r53_create_heath_check(route53, ip, ref):
+    xml_body = """<?xml version="1.0" encoding="UTF-8"?>
+<CreateHealthCheckRequest xmlns="https://route53.amazonaws.com/doc/2012-12-12/">
+   <CallerReference>{ref}</CallerReference>
+   <HealthCheckConfig>
+      <IPAddress>{ip}</IPAddress>
+      <Type>HTTP</Type>
+      <ResourcePath>/cgi-bin/monitor.py</ResourcePath>
+   </HealthCheckConfig>
+</CreateHealthCheckRequest>""".format(ip=ip, ref=ref)
+    response = route53.make_request('POST', '/2012-12-12/healthcheck', {'Content-Type' : 'text/xml'}, xml_body)
+    body = response.read()
+    boto.log.debug(body)
+    if response.status >= 300:
+        raise boto.route53.exception.DNSServerError(response.status,
+                                       response.reason,
+                                       body)
+    e = boto.jsonresponse.Element()
+    h = boto.jsonresponse.XmlHandler(e, None)
+    h.parse(body)
+    return e
+
+def r53_delete_heath_check(route53, health_check_id):
+    response = route53.make_request('DELETE', '/2012-12-12/healthcheck/{0}'.format(health_check_id))
+    body = response.read()
+    boto.log.debug(body)
+    if response.status >= 300:
+        raise boto.route53.exception.DNSServerError(response.status,
+                                       response.reason,
+                                       body)
+
 class Demo(models.Model):
     name = models.CharField("Name", max_length=200)
     organization = models.CharField("Organization", max_length=200)
@@ -25,10 +71,14 @@ class Demo(models.Model):
     approved = models.DateTimeField("Approved", null=True, blank=True)
     launched = models.DateTimeField("Launched", null=True, blank=True)
     shutdown = models.DateTimeField("Shutdown", null=True, blank=True)
-    east_coast_instance = models.CharField("East Coast Instance ID", max_length=200, default="", blank=True)
-    west_coast_instance = models.CharField("West Coast Instance ID", max_length=200, default="", blank=True)
+    east_coast_instance = models.CharField("East Coast EC2 Instance ID", max_length=200, default="", blank=True)
+    west_coast_instance = models.CharField("West Coast EC2 Instance ID", max_length=200, default="", blank=True)
+    east_coast_health_check = models.CharField("East Coast R53 Health Check ID", max_length=200, default="", blank=True)
+    west_coast_health_check = models.CharField("West Coast R53 Health Check ID", max_length=200, default="", blank=True)
     east_coast_dns = models.CharField("East Coast Server DNS Address", max_length=200, default="", blank=True)
     west_coast_dns = models.CharField("West Coast Server DNS Address", max_length=200, default="", blank=True)
+    east_coast_ip = models.IPAddressField("East Coast Server IP Address", default="", blank=True)
+    west_coast_ip = models.IPAddressField("West Coast Server IP Address", default="", blank=True)
 
     def __unicode__(self):
         return "{name} ({organization}) <{email}>".format(name=self.name, organization=self.organization, email=self.email)
@@ -57,9 +107,10 @@ class Demo(models.Model):
     def do_launch(self):
         self.launched = timezone.now()
         self.shutdown = None
-
         # Provision Servers
         (east_con, west_con) = self.get_ec2_connections()
+        route53 = boto.connect_route53()
+        route53.Version = '2012-12-12'
         east_res = east_con.run_instances(
             settings.EAST_AMI,
             key_name=settings.EAST_KEY_NAME,
@@ -84,6 +135,8 @@ class Demo(models.Model):
             sleep(30)
         self.east_coast_dns = east_instance.public_dns_name
         self.west_coast_dns = west_instance.public_dns_name
+        self.east_coast_ip = east_instance.ip_address
+        self.west_coast_ip = west_instance.ip_address
         self.save()
         east_instance.add_tag("Name", "east-generic-noel")
         east_instance.add_tag("Started For", str(self)[:255])
@@ -113,6 +166,15 @@ class Demo(models.Model):
             params.hosts['west'].update(properties)
             params.hosts['east'].update(properties)
             m(params, properties).run()
+
+        self.east_coast_health_check = r53_create_heath_check(route53, self.east_coast_ip, self.east_coast_instance)['CreateHealthCheckResponse']['HealthCheck']['Id']
+        self.west_coast_health_check = r53_create_heath_check(route53, self.west_coast_ip, self.west_coast_instance)['CreateHealthCheckResponse']['HealthCheck']['Id']
+        rrs = boto.route53.record.ResourceRecordSets(route53, ROUTE53_HOSTED_ZONE)
+        rrs.changes.append(['CREATE', R53RecordWithHealthCheck(self.east_coast_health_check, '{0}.bulletproofblog.geniedb.com'.format(self.pk), 'A', identifier=self.east_coast_instance, weight=1, resource_records=[self.east_coast_ip])])
+        rrs.changes.append(['CREATE', R53RecordWithHealthCheck(self.west_coast_health_check, '{0}.bulletproofblog.geniedb.com'.format(self.pk), 'A', identifier=self.west_coast_instance, weight=1, resource_records=[self.west_coast_ip])])
+        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/2011-05-05/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
+        rrs.commit()
+        self.save()
 
     def node_info(self, coast):
         if coast == 'east':
@@ -192,6 +254,15 @@ class Demo(models.Model):
     def do_shutdown(self):
         self.shutdown = timezone.now()
         (east_con, west_con) = self.get_ec2_connections()
+        route53 = boto.connect_route53()
+        route53.Version = '2012-12-12'
         east_con.terminate_instances([self.east_coast_instance])
         west_con.terminate_instances([self.west_coast_instance])
+        rrs = boto.route53.record.ResourceRecordSets(route53, ROUTE53_HOSTED_ZONE)
+        rrs.changes.append(['DELETE', R53RecordWithHealthCheck(self.east_coast_health_check, '{0}.bulletproofblog.geniedb.com'.format(self.pk), 'A', identifier=self.east_coast_instance, weight=1, resource_records=[self.east_coast_ip])])
+        rrs.changes.append(['DELETE', R53RecordWithHealthCheck(self.west_coast_health_check, '{0}.bulletproofblog.geniedb.com'.format(self.pk), 'A', identifier=self.west_coast_instance, weight=1, resource_records=[self.west_coast_ip])])
+        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/2011-05-05/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
+        rrs.commit()
+        r53_delete_heath_check(route53, self.east_coast_health_check)
+        r53_delete_heath_check(route53, self.west_coast_health_check)
         self.save()
