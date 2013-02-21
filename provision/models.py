@@ -205,7 +205,7 @@ class Demo(models.Model):
         [node.create_health_check(route53) for node in nodes]
         rrs = boto.route53.record.ResourceRecordSets(route53, settings.ROUTE53_HOSTED_ZONE)
         [rrs.changes.append(['CREATE', node.get_r53_rr()]) for node in nodes]
-        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/2011-05-05/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
+        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/\d\d\d\d-\d\d?-\d\d?/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
         rrs.commit()
         self.save()
 
@@ -235,7 +235,7 @@ class Demo(models.Model):
         [node.do_terminate(ec2regions) for node in nodes]
         rrs = boto.route53.record.ResourceRecordSets(route53, settings.ROUTE53_HOSTED_ZONE)
         [rrs.changes.append(['DELETE', node.get_r53_rr()]) for node in nodes]
-        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/2011-05-05/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
+        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/\d\d\d\d-\d\d?-\d\d?/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
         rrs.commit()
         [node.delete_health_check(route53) for node in nodes]
         self.save()
