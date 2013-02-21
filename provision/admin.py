@@ -28,3 +28,4 @@ class DemoAdmin(admin.ModelAdmin):
             d.do_shutdown()
 
 admin.site.register(Demo, DemoAdmin)
+admin.site.register(Node)
