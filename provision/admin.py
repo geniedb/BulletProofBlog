@@ -1,12 +1,17 @@
-from provision.models import Demo
+from provision.models import Demo, Node
 from django.contrib import admin
+
+
+class NodeInline(admin.StackedInline):
+    model=Node
+    extra=0
 
 class DemoAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields':['name','organization','email']}),
         ("Status Info", {'fields':['approved','launched','shutdown']}),
-        ("Cluster Info", {'fields':['east_coast_instance', 'west_coast_instance', 'east_coast_dns','west_coast_dns']})
     ]
+    inlines = [NodeInline]
     list_display = ('__unicode__', 'approved','launched','shutdown')
     actions = ['approve', 'launch', 'shutdown']
 

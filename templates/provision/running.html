@@ -2,12 +2,14 @@
 {% block headextra %}
 <script type="text/javascript">
 function handleJson(info) {
-	$("#"+info.coast+"link").css('background-color', info.status==0 ? "#CCFFCC" : "#FFCCCC")
+	$("#"+info.node_id+"link").css('background-color', info.status==0 ? "#CCFFCC" : "#FFCCCC")
 }
 
 function requestUpdates() {
-	$.getJSON('east/',{format:'json'},handleJson);
-	$.getJSON('west/',{format:'json'},handleJson);
+{% for node in nodes %}
+	$.getJSON('{{node.type}}/',{format:'json'},handleJson);
+	$.getJSON('{{node.type}}/',{format:'json'},handleJson);
+{% endfor %}
 }
 
 $(document).ready(function() {
@@ -19,24 +21,21 @@ $(document).ready(function() {
 {% block content %}
 <h2>Your demo is running</h2>
 
-<div class="stylized">
-<h3>Your Cluster Info</h3>
-<table><tr>
-<td><form id="east" method="post" action="east/">
-{% csrf_token %}
-<a id="eastlink" href="http://{{demo.east_coast_dns}}/">East coast node</a><br />
-<button type="submit" name="action" value="start">Start</button><br />
-<button type="submit" name="action" value="stop">Stop</button>
-</form></td>
-<td><form id="east" method="post" action="west/">
-{% csrf_token %}
-<a id="westlink" href="http://{{demo.west_coast_dns}}/">West coast node</a><br />
-<button type="submit" name="action" value="start">Start</button><br />
-<button type="submit" name="action" value="stop">Stop</button>
-</form></td>
-</tr></table>
+<a id="bplink" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/">Bullet Proof Blog</a>
 
-<a id="bplink" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/">Bullet Proof Blog</a><br />
+<div class="stylized">
+<h3>Your Nodes</h3>
+<table><tr>
+{% for node in nodes %}
+<td><form method="post" action="{{node.type}}/">
+{% csrf_token %}
+Node {{node.type}}
+<a id="{{node.type}}link" href="http://{{node.dns}}/">Link</a><br />
+<button type="submit" name="action" value="start">Start</button><br />
+<button type="submit" name="action" value="stop">Stop</button>
+</form></td>
+{% endfor %}
+</tr></table>
 </div>
 
 {% endblock %}

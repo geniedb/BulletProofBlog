@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from provision.models import Demo
+from provision.models import Demo, Node
 from django.core.signing import Signer
 from django.http import HttpResponseRedirect, HttpResponse,\
     HttpResponseForbidden, HttpResponseNotAllowed
@@ -25,29 +25,28 @@ def demo(req, demo_id):
     if d.shutdown is not None:
         return render(req,'provision/shutdown.html', {'demo': d})
     elif d.launched is not None:
-        return render(req,'provision/running.html', {'demo': d})
+        return render(req,'provision/running.html', {'demo': d, 'nodes': d.node_set.all()})
     elif d.approved is not None:
         return render(req,'provision/launch.html', {'demo': d})
     else:
         return render(req,'provision/awaiting_approval.html', {'demo': d})
 
-def node(req, demo_id, node_id):
+def node(req, demo_id, node_type):
     demo_id=Signer().unsign(demo_id)
     d = get_object_or_404(Demo, pk=demo_id)
     if d.shutdown is not None or d.launched is None:
         return HttpResponseForbidden("Demo not running.")
-    if node_id not in ("east","west"):
-        return HttpResponseForbidden("Invalid node.")
+    n = get_object_or_404(Node, demo=d, type=node_type)
 
     if req.method == "GET":
-        return HttpResponse(json.dumps(d.node_info(node_id)), mimetype="application/json")
+        return HttpResponse(json.dumps(d.node_info(n)), mimetype="application/json")
     elif req.method == "POST":
         if not req.POST.has_key('action'):
             return HttpResponseForbidden("Invalid action.")
         if req.POST['action'] == "start":
-            d.do_start(node_id)
+            d.do_start(n)
         elif req.POST['action'] == "stop":
-            d.do_stop(node_id)
+            d.do_stop(n)
         else:
             return HttpResponseForbidden()
         return HttpResponseRedirect(d.get_absolute_url())
