@@ -1,4 +1,4 @@
-# Django settings for GenieDemo project.
+# Django settings for BuletProofBlog project.
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -120,10 +120,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'GenieDemo.urls'
+ROOT_URLCONF = 'BulletProofBlog.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'GenieDemo.wsgi.application'
+WSGI_APPLICATION = 'BulletProofBlog.wsgi.application'
 
 TEMPLATE_DIRS = (
     'templates'
