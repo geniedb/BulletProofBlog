@@ -7,14 +7,19 @@ from django.core.mail import mail_admins
 from django.utils import timezone
 import datetime
 import json
+from django.conf import settings
 
 def request(req):
     try:
         d = Demo(name=req.POST['name'], organization=req.POST['organization'], email=req.POST['email'])
     except:
-        return render(req, 'provision/request.html')
-    d.save()
-    mail_admins("New Demo Request", "{demo} has requested a demo.".format(demo=d))
+        return render(req, 'provision/request.html', {'require_approval': settings.REQUIRE_APPROVAL})
+    if settings.REQUIRE_APPROVAL:
+        d.save()
+        mail_admins("New Demo Request", "{demo} has requested a demo.".format(demo=d))
+    else:
+        d.do_approve(False)
+        d.do_launch()
     return HttpResponseRedirect(d.get_absolute_url())
 
 def demo(req, demo_id):

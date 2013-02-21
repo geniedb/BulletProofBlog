@@ -173,9 +173,10 @@ class Demo(models.Model):
     def launchable(self):
         return self.approved is not None and self.launched is None
 
-    def do_approve(self):
+    def do_approve(self, email=True):
         self.approved = timezone.now()
-        send_mail("CloudFabric Demo Ready",
+        if email:
+            send_mail("CloudFabric Demo Ready",
                   DEMO_MESSAGE.format(domain=Site.objects.get_current().domain, path=self.get_absolute_url()),
                   'tech@geniedb.com',
                   [self.email])

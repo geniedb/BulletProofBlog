@@ -1,7 +1,21 @@
 {% extends "base.html" %}
+{% block headextra %}
+{%if not require_approval %}
+<script type="text/javascript">
+$(function() {
+	$("#go").on("click", function(e) {
+		e.preventDefault();
+		$(this).prop("disabled",true);
+		$(this).val("Launching...");
+		$("#form").submit();
+	});
+});
+</script>
+{%endif%}
+{% endblock %}
 {% block content %}
 <div class="stylized">
-<form method="post">
+<form id="form" method="post">
 	<p>Sign up here for a demonstration CloudFabric cluster. You will get a two node cluster for one hour.</p> 
     {% csrf_token %}
     <label for="name">Name<span class="small">Your name</span></label>
@@ -13,7 +27,7 @@
     <label for="email">E-mail<span class="small">An email address we can reach you at</span></label>
     <input id="email" name="email" />
     
-    <input type="submit" value="Request Demo">
+    <input id="go" type="submit" value="{%if require_approval %}Request{%else%}Launch{%endif%} Demo">
 	<div class="spacer"></div>
 </form>
 </div>
