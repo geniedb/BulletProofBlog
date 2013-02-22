@@ -157,7 +157,7 @@ class Demo(models.Model):
 
     def run_tinc_tailor(self, nodes, commands):
         properties={
-            'use_tinc':'true',
+            'use_tinc':'false',
             'netname':'cf',
             'transport':'tcp',
             'hosts_dir': settings.HOSTS_DIR+str(self.pk),
@@ -214,7 +214,7 @@ class Demo(models.Model):
 
         # Install CloudFabric
         logger.debug("%s: instances running", self)
-        self.run_tinc_tailor(nodes, ((Tinc,['tinc','install']), (Cloudfabric,['cloudfabric','refresh'])))
+        self.run_tinc_tailor(nodes, [(Cloudfabric,['cloudfabric','refresh'])])
         logger.debug("%s: installed cloudfabric", self)
         [node.create_health_check(route53) for node in nodes]
         logger.debug("%s: Route53 health checks created", self)
