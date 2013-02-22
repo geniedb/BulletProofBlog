@@ -84,7 +84,10 @@ class Node(models.Model):
     demo = models.ForeignKey('Demo', null=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
-        return "Instance {id} at {dns}".format(id=self.instance_id, dns=self.dns)
+        if len(self.dns) == 0:
+            return "Instance {id}".format(id=self.instance_id)
+        else:
+            return "Instance {id} at {dns}".format(id=self.instance_id, dns=self.dns)
 
     @models.permalink
     def get_absolute_url(self):
