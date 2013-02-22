@@ -10,7 +10,6 @@ function handleJson(info) {
 function requestUpdates() {
 {% for node in nodes %}
 	$.getJSON('{{node.type}}/',{format:'json'},handleJson);
-	$.getJSON('{{node.type}}/',{format:'json'},handleJson);
 {% endfor %}
 }
 
