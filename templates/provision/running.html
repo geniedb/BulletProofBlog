@@ -2,7 +2,9 @@
 {% block headextra %}
 <script type="text/javascript">
 function handleJson(info) {
-	$("#"+info.node_id+"link").css('background-color', info.status==0 ? "#CCFFCC" : "#FFCCCC")
+	$("#"+info.node_id+"link").css('background-color', info.status==0 ? "#CCFFCC" : "#FFCCCC");
+	$("#"+(info.status==0 ? "stop_" : "start_") +info.node_id).show();
+	$("#"+(info.status==0 ? "start_" : "stop_") +info.node_id).hide();
 }
 
 function requestUpdates() {
@@ -15,6 +17,10 @@ function requestUpdates() {
 $(document).ready(function() {
 	window.setInterval(requestUpdates, 10000);
 	requestUpdates();
+{% for node in nodes %}
+	$("#{{node.type}}link").css('background-color', "#CCFFCC");
+	$("#start_{{node.type}}").hide();
+{% endfor %}
 });
 </script>
 {% endblock %}
@@ -31,8 +37,8 @@ $(document).ready(function() {
 {% csrf_token %}
 Node {{node.type}}
 <a id="{{node.type}}link" href="http://{{node.dns}}/">Link</a><br />
-<button type="submit" name="action" value="start">Start</button><br />
-<button type="submit" name="action" value="stop">Stop</button>
+<button type="submit" id="start_{{node.type}}" name="action" value="start">Start</button>
+<button type="submit" id="stop_{{node.type}}" name="action" value="stop">Stop</button>
 </form></td>
 {% endfor %}
 </tr></table>
