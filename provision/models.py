@@ -3,6 +3,7 @@ import re
 import datetime
 from argparse import ArgumentParser
 from time import sleep
+from logging import getLogger
 import boto.ec2
 import boto.route53.record
 from django.db import models
@@ -13,6 +14,8 @@ from django.core.signing import Signer
 from django.contrib.sites.models import Site
 from tailor.tinc import Tinc
 from tailor.cloudfabric import Cloudfabric
+
+logger = getLogger(__name__)
 
 DEMO_MESSAGE = """Your CloudFabric Demo has been approved
 
@@ -187,6 +190,7 @@ class Demo(models.Model):
         return( boto.connect_ec2(), boto.ec2.regions()[4].connect())
 
     def do_launch(self):
+        logger.info("%s: launching", self)
         self.launched = timezone.now()
         self.shutdown = None
         # Provision Servers
@@ -196,17 +200,22 @@ class Demo(models.Model):
         nodes = [Node(demo=self, type=node_type) for node_type in xrange(len(settings.NODES))]
         [node.do_launch(ec2regions) for node in nodes]
         self.save()
+        logger.debug("%s: provisioned %s", self, ",".join(str(node) for node in nodes))
         while True in (node.pending() for node in nodes):
             sleep(15)
         [node.update({'Name':'bullet-proof-blog', 'Customer':str(self)[:255], 'Demo ID':str(self.pk)}) for node in nodes]
 
         # Install CloudFabric
+        logger.debug("%s: instances running", self)
         self.run_tinc_tailor(nodes, ((Tinc,['tinc','install']), (Cloudfabric,['cloudfabric','refresh'])))
+        logger.debug("%s: installed cloudfabric", self)
         [node.create_health_check(route53) for node in nodes]
+        logger.debug("%s: Route53 health checks created", self)
         rrs = boto.route53.record.ResourceRecordSets(route53, settings.ROUTE53_HOSTED_ZONE)
         [rrs.changes.append(['CREATE', node.get_r53_rr()]) for node in nodes]
         rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/\d\d\d\d-\d\d?-\d\d?/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
         rrs.commit()
+        logger.debug("%s: Route53 DNS created", self)
         self.save()
 
     def node_info(self, node):
@@ -227,15 +236,19 @@ class Demo(models.Model):
         self.run_tinc_tailor(nodes, [[Cloudfabric,['cloudfabric', 'stop', 'node_{0}'.format(node.type)]]])
 
     def do_shutdown(self):
+        logger.info("%s: shutting down", self)
         nodes = self.node_set.all()
         self.shutdown = timezone.now()
         ec2regions = EC2Regions()
         route53 = boto.connect_route53()
         route53.Version = '2012-12-12'
         [node.do_terminate(ec2regions) for node in nodes]
+        logger.debug("%s: instances terminated", self)
         rrs = boto.route53.record.ResourceRecordSets(route53, settings.ROUTE53_HOSTED_ZONE)
         [rrs.changes.append(['DELETE', node.get_r53_rr()]) for node in nodes]
         rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/\d\d\d\d-\d\d?-\d\d?/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
+        logger.debug("%s: Route53 DNS terminated", self)
         rrs.commit()
         [node.delete_health_check(route53) for node in nodes]
+        logger.debug("%s: Route53 health checks terminated", self)
         self.save()

@@ -7,7 +7,10 @@ from django.core.mail import mail_admins
 from django.utils import timezone
 import datetime
 import json
+from logging import getLogger
 from django.conf import settings
+
+logger = getLogger(__name__)
 
 def request(req):
     try:
@@ -16,6 +19,7 @@ def request(req):
         return render(req, 'provision/request.html', {'require_approval': settings.REQUIRE_APPROVAL})
     if settings.REQUIRE_APPROVAL:
         d.save()
+        logger.info("%s: new demo request", d)
         mail_admins("New Demo Request", "{demo} has requested a demo.".format(demo=d))
     else:
         d.do_approve(False)
@@ -62,7 +66,8 @@ def shutdown_old(req):
     # doesn't require perms
     for d in Demo.objects.filter(shutdown__exact=None, launched__lte=timezone.now() - datetime.timedelta(hours=1)):
         try:
+            logger.info("%s: shutting down during cleanup", d)
             d.do_shutdown()
         except:
-            pass
+            logger.exception("%s: Cloud not shutdown during cleanup", d)
     return HttpResponse()
