@@ -26,7 +26,7 @@ $(document).ready(function() {
 {% block content %}
 <h2>Your demo is running</h2>
 
-<a id="bplink" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/">Bullet Proof Blog</a>
+<a id="bplink" target="_blank" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/">Bullet Proof Blog</a>
 
 <div class="stylized">
 <h3>Your Nodes</h3>
@@ -35,7 +35,7 @@ $(document).ready(function() {
 <td><form method="post" action="{{node.type}}/">
 {% csrf_token %}
 Node {{node.type}}
-<a id="{{node.type}}link" href="http://{{node.dns}}/">Link</a><br />
+<a id="{{node.type}}link" target="_blank" href="http://{{node.dns}}/">Link</a><br />
 <button type="submit" id="start_{{node.type}}" name="action" value="start">Start</button>
 <button type="submit" id="stop_{{node.type}}" name="action" value="stop">Stop</button>
 </form></td>
