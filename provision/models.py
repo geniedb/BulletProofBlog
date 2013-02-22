@@ -106,6 +106,7 @@ class Node(models.Model):
         self.save()
 
     def do_terminate(self, ec2regions):
+        logger.debug("%s: terminating", self)
         ec2regions[settings.NODES[self.type]['REGION']].terminate_instances([self.instance_id])
         self.delete()
 
@@ -131,10 +132,12 @@ class Node(models.Model):
         )
 
     def create_health_check(self,route53):
+        logger.debug("%s: creating health check", self)
         self.health_check = r53_create_heath_check(route53, self.ip, self.instance_id)['CreateHealthCheckResponse']['HealthCheck']['Id']
         self.save()
 
     def delete_health_check(self,route53):
+        logger.debug("%s: deleting health check", self)
         self.health_check = r53_delete_heath_check(route53, self.health_check)
 
 class Demo(models.Model):
@@ -166,6 +169,7 @@ class Demo(models.Model):
             m.setup_argparse(subparsers.add_parser(n[0]))
         last_res = None
         for m,n in commands:
+            logger.debug("%s: running tinc-tailor %s", self, " ".join(n))
             params = parser.parse_args(n)
             params.hosts = dict(
                 ('node_{0}'.format(i), {'connect_to':nodes[i].dns}) for i in xrange(len(nodes))
