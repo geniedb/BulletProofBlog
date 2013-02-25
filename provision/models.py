@@ -5,15 +5,14 @@ from argparse import ArgumentParser
 from time import sleep
 from logging import getLogger
 import boto.ec2
-import boto.route53.record
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.core.signing import Signer
 from django.contrib.sites.models import Site
-from tailor.tinc import Tinc
 from tailor.cloudfabric import Cloudfabric
+from subprocess import check_call
 
 logger = getLogger(__name__)
 
@@ -23,48 +22,6 @@ Please visit http://{domain}{path} to launch your demo.
 --
 GenieDB
 """
-
-class R53RecordWithHealthCheck(boto.route53.record.Record):
-    def __init__(self, health_check_id, *args, **kwargs):
-        super(R53RecordWithHealthCheck,self).__init__( *args, **kwargs)
-        self.health_check_id = health_check_id
-
-    def to_xml(self):
-        out = super(R53RecordWithHealthCheck,self).to_xml()
-        return re.sub('</ResourceRecordSet>',
-                      '<HealthCheckId>{0}</HealthCheckId></ResourceRecordSet>'.format(self.health_check_id),
-                      out)
-
-def r53_create_heath_check(route53, ip, ref):
-    xml_body = """<?xml version="1.0" encoding="UTF-8"?>
-<CreateHealthCheckRequest xmlns="https://route53.amazonaws.com/doc/2012-12-12/">
-   <CallerReference>{ref}</CallerReference>
-   <HealthCheckConfig>
-      <IPAddress>{ip}</IPAddress>
-      <Type>HTTP</Type>
-      <ResourcePath>/cgi-bin/monitor.py?format=json</ResourcePath>
-   </HealthCheckConfig>
-</CreateHealthCheckRequest>""".format(ip=ip, ref=ref)
-    response = route53.make_request('POST', '/2012-12-12/healthcheck', {'Content-Type' : 'text/xml'}, xml_body)
-    body = response.read()
-    boto.log.debug(body)
-    if response.status >= 300:
-        raise boto.route53.exception.DNSServerError(response.status,
-                                       response.reason,
-                                       body)
-    e = boto.jsonresponse.Element()
-    h = boto.jsonresponse.XmlHandler(e, None)
-    h.parse(body)
-    return e
-
-def r53_delete_heath_check(route53, health_check_id):
-    response = route53.make_request('DELETE', '/2012-12-12/healthcheck/{0}'.format(health_check_id))
-    body = response.read()
-    boto.log.debug(body)
-    if response.status >= 300:
-        raise boto.route53.exception.DNSServerError(response.status,
-                                       response.reason,
-                                       body)
 
 class EC2Regions(object):
     def __init__(self):
@@ -77,7 +34,6 @@ class EC2Regions(object):
 
 class Node(models.Model):
     instance_id = models.CharField("EC2 Instance ID", max_length=200, default="", blank=True)
-    health_check = models.CharField("R53 Health Check ID", max_length=200, default="", blank=True)
     dns = models.CharField("EC2 Public DNS Address", max_length=200, default="", blank=True)
     ip = models.IPAddressField("EC2 Instance IP Address", default="", blank=True)
     type = models.SmallIntegerField("EC2 Instance type")
@@ -120,26 +76,6 @@ class Node(models.Model):
         for k,v in tags.items():
             self.instance.add_tag(k, v)
 
-    def get_r53_rr(self):
-        return R53RecordWithHealthCheck(
-            self.health_check,
-            settings.DNS_TEMPLATE.format(demo_id=self.demo.pk),
-            'A',
-            ttl=30,
-            identifier=self.instance_id,
-            weight=1,
-            resource_records=[self.ip]
-        )
-
-    def create_health_check(self,route53):
-        logger.debug("%s: creating health check", self)
-        self.health_check = r53_create_heath_check(route53, self.ip, self.instance_id)['CreateHealthCheckResponse']['HealthCheck']['Id']
-        self.save()
-
-    def delete_health_check(self,route53):
-        logger.debug("%s: deleting health check", self)
-        self.health_check = r53_delete_heath_check(route53, self.health_check)
-
 class Demo(models.Model):
     name = models.CharField("Name", max_length=200)
     organization = models.CharField("Organization", max_length=200)
@@ -151,9 +87,64 @@ class Demo(models.Model):
     def __unicode__(self):
         return "{name} ({organization}) <{email}>".format(name=self.name, organization=self.organization, email=self.email)
 
+    def get_dns(self):
+        return settings.DNS_TEMPLATE.format(demo_id=self.pk)
+
     @models.permalink
     def get_absolute_url(self):
         return ('provision.views.demo', [Signer().sign(self.pk)])
+
+    def get_haproxy_frontend(self, loadbalencer=None):
+        return "\tacl demo{pk}acl hdr(host) -i {dns}\n\tuse_backend demo{pk} if demo{pk}acl".format(
+            pk=self.pk,
+            dns=self.get_dns()
+        )
+
+    def get_haproxy_backend(self, loadbalencer):
+        nodeDNS = [(node.type, node.dns) for node in self.node_set.all() if len(node.dns) > 0]
+        head = """backend demo{pk}\n\toption\thttpchk HEAD /""".format(pk=self.pk)
+        active = ["server demo{pk} {dns}:80 check".format(pk=self.pk, dns=node[1]) for node in nodeDNS if node[0] in loadbalencer['active']]
+        backup = ["server demo{pk} {dns}:80 check backup".format(pk=self.pk, dns=node[1]) for node in nodeDNS if node[0] in loadbalencer['backup']]
+        return "\n\t".join([head] + active + backup)
+
+    @classmethod
+    def get_haproxy_config(cls, loadbalencer):
+        head = """
+global
+    log /dev/log    local0
+    maxconn 4096
+    #chroot /usr/share/haproxy
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log    global
+    mode    http
+    option    httplog
+    retries    3
+    option redispatch
+    maxconn    2000
+    contimeout    5000
+    clitimeout    50000
+    srvtimeout    50000
+
+frontend main
+    bind    *:80
+"""
+        frontends = [d.get_haproxy_frontend(loadbalencer) for d in cls.objects.filter(shutdown__exact=None).exclude(launched__exact=None)]
+        backends = [d.get_haproxy_backend(loadbalencer) for d in cls.objects.filter(shutdown__exact=None).exclude(launched__exact=None)]
+        return "\n".join([head]+frontends+backends)
+
+    @classmethod
+    def configure_haproxy(cls):
+        for lb in settings.LOADBALENCERS:
+            if lb['host'] is not 'localhost':
+                raise Exception()
+            with open(lb['config'], "w") as f:
+                f.write(cls.get_haproxy_config(lb))
+                f.write('\n')
+            check_call(lb['command'])
 
     def run_tinc_tailor(self, nodes, commands):
         properties={
@@ -200,10 +191,7 @@ class Demo(models.Model):
         logger.info("%s: launching", self)
         self.launched = timezone.now()
         self.shutdown = None
-        # Provision Servers
         ec2regions = EC2Regions()
-        route53 = boto.connect_route53()
-        route53.Version = '2012-12-12'
         nodes = [Node(demo=self, type=node_type) for node_type in xrange(len(settings.NODES))]
         [node.do_launch(ec2regions) for node in nodes]
         self.save()
@@ -211,19 +199,12 @@ class Demo(models.Model):
         while True in (node.pending() for node in nodes):
             sleep(15)
         [node.update({'Name':'bullet-proof-blog', 'Customer':str(self)[:255], 'Demo ID':str(self.pk)}) for node in nodes]
-
-        # Install CloudFabric
+        sleep(30)
         logger.debug("%s: instances running", self)
         self.run_tinc_tailor(nodes, [(Cloudfabric,['cloudfabric','refresh'])])
         logger.debug("%s: installed cloudfabric", self)
-        [node.create_health_check(route53) for node in nodes]
-        logger.debug("%s: Route53 health checks created", self)
-        rrs = boto.route53.record.ResourceRecordSets(route53, settings.ROUTE53_HOSTED_ZONE)
-        [rrs.changes.append(['CREATE', node.get_r53_rr()]) for node in nodes]
-        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/\d\d\d\d-\d\d?-\d\d?/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
-        rrs.commit()
-        logger.debug("%s: Route53 DNS created", self)
-        self.save()
+        self.__class__.configure_haproxy()
+        logger.debug("%s: HAProxy configured", self)
 
     def node_info(self, node):
         nodes = self.node_set.all()
@@ -247,15 +228,6 @@ class Demo(models.Model):
         nodes = self.node_set.all()
         self.shutdown = timezone.now()
         ec2regions = EC2Regions()
-        route53 = boto.connect_route53()
-        route53.Version = '2012-12-12'
         [node.do_terminate(ec2regions) for node in nodes]
         logger.debug("%s: instances terminated", self)
-        rrs = boto.route53.record.ResourceRecordSets(route53, settings.ROUTE53_HOSTED_ZONE)
-        [rrs.changes.append(['DELETE', node.get_r53_rr()]) for node in nodes]
-        rrs.ChangeResourceRecordSetsBody = re.sub('https://route53.amazonaws.com/doc/\d\d\d\d-\d\d?-\d\d?/', 'https://route53.amazonaws.com/doc/2012-12-12/', rrs.ChangeResourceRecordSetsBody)
-        logger.debug("%s: Route53 DNS terminated", self)
-        rrs.commit()
-        [node.delete_health_check(route53) for node in nodes]
-        logger.debug("%s: Route53 health checks terminated", self)
         self.save()

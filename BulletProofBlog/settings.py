@@ -37,9 +37,18 @@ NODES = [
      }
 ]
 
+LOADBALENCERS = [
+    {
+        'host': 'localhost',
+        'command': ['sudo','/etc/init.d/haproxy', 'reload'],
+        'config': '/etc/haproxy/bpb.cfg',
+        'active': [0],
+        'backup': [1]
+     }
+]
+
 KEY_FILE = 'generic-geniedb-demo.pem'
 HOSTS_DIR = '/tmp/hosts'
-ROUTE53_HOSTED_ZONE='Z13SNCNW12N6M3'
 DNS_TEMPLATE='{demo_id}.bulletproofblog.geniedb.com'
 REQUIRE_APPROVAL=False
 
