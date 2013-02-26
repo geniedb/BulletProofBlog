@@ -129,8 +129,12 @@ defaults
     clitimeout    50000
     srvtimeout    50000
 
+backend bpb
+    server local 127.0.0.1:8080
+
 frontend main
     bind    *:80
+    default_backend bpb
 """
         frontends = [d.get_haproxy_frontend(loadbalencer) for d in cls.objects.filter(shutdown__exact=None).exclude(launched__exact=None)]
         backends = [d.get_haproxy_backend(loadbalencer) for d in cls.objects.filter(shutdown__exact=None).exclude(launched__exact=None)]
