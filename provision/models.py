@@ -103,8 +103,8 @@ class Demo(models.Model):
     def get_haproxy_backend(self, loadbalencer):
         nodeDNS = [(node.type, node.dns) for node in self.node_set.all() if len(node.dns) > 0]
         head = """backend demo{pk}\n\toption\thttpchk HEAD /""".format(pk=self.pk)
-        active = ["server demo{pk} {dns}:80 check".format(pk=self.pk, dns=node[1]) for node in nodeDNS if node[0] in loadbalencer['active']]
-        backup = ["server demo{pk} {dns}:80 check backup".format(pk=self.pk, dns=node[1]) for node in nodeDNS if node[0] in loadbalencer['backup']]
+        active = ["server demo{pk} {dns}:80 check observe layer7 error-limit 1".format(pk=self.pk, dns=node[1]) for node in nodeDNS if node[0] in loadbalencer['active']]
+        backup = ["server demo{pk} {dns}:80 check observe layer7 error-limit 1 backup".format(pk=self.pk, dns=node[1]) for node in nodeDNS if node[0] in loadbalencer['backup']]
         return "\n\t".join([head] + active + backup)
 
     @classmethod
