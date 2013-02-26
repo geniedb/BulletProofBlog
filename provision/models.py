@@ -125,9 +125,9 @@ defaults
     retries    3
     option redispatch
     maxconn    2000
-    contimeout    5000
-    clitimeout    50000
-    srvtimeout    50000
+    contimeout    6000
+    clitimeout    600000
+    srvtimeout    600000
 
 backend bpb
     server local 127.0.0.1:8080
