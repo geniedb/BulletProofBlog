@@ -34,7 +34,7 @@ def demo(req, demo_id):
     if d.shutdown is not None:
         return render(req,'provision/shutdown.html', {'demo': d})
     elif d.launched is not None:
-        return render(req,'provision/running.html', {'demo': d, 'nodes': d.node_set.all()})
+        return render(req,'provision/running.html', {'demo': d, 'nodes': d.node_set.all().order_by('type')})
     elif d.approved is not None:
         return render(req,'provision/launch.html', {'demo': d})
     else:
