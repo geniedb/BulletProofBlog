@@ -40,8 +40,7 @@ NODES = [
 LOADBALENCERS = [
     {
         'host': 'localhost',
-        'command': ['sudo','/etc/init.d/haproxy', 'reload'],
-        'config': '/etc/haproxy/bpb.cfg',
+        'hmac_key': 'xxx',
         'active': [0],
         'backup': [1]
      }

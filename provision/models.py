@@ -1,9 +1,11 @@
+#!/usr/bin/python
 
-import re
+import hmac
 import datetime
 from argparse import ArgumentParser
 from time import sleep
 from logging import getLogger
+from urllib2 import urlopen
 import boto.ec2
 from django.db import models
 from django.conf import settings
@@ -12,7 +14,6 @@ from django.core.mail import send_mail
 from django.core.signing import Signer
 from django.contrib.sites.models import Site
 from tailor.cloudfabric import Cloudfabric
-from subprocess import check_call
 
 logger = getLogger(__name__)
 
@@ -143,12 +144,10 @@ frontend main
     @classmethod
     def configure_haproxy(cls):
         for lb in settings.LOADBALENCERS:
-            if lb['host'] is not 'localhost':
-                raise Exception()
-            with open(lb['config'], "w") as f:
-                f.write(cls.get_haproxy_config(lb))
-                f.write('\n')
-            check_call(lb['command'])
+            data = cls.get_haproxy_config(lb)
+            h = hmac.new(lb['hmac_key'], data)
+            url = "http://{lb}/?hmac={hmac}".format(lb=lb, hmac=h.hexdigest())
+            urlopen(url, data)
 
     def run_tinc_tailor(self, nodes, commands):
         properties={
