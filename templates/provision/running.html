@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
 {% block headextra %}
 <script type="text/javascript">
 function handleJson(info) {
@@ -17,30 +19,61 @@ $(document).ready(function() {
 	window.setInterval(requestUpdates, 10000);
 	requestUpdates();
 {% for node in nodes %}
-	$("#{{node.type}}link").css('background-color', "#CCFFCC");
 	$("#start_{{node.type}}").hide();
 {% endfor %}
 });
 </script>
 {% endblock %}
 {% block content %}
-<h2>Your demo is running</h2>
-
-<a id="bplink" target="_blank" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/">Bullet Proof Blog</a>
-
-<div class="stylized">
-<h3>Your Nodes</h3>
+<div id="callToAction"></div>
+<div class="runningServers">
 <table><tr>
 {% for node in nodes %}
-<td><form method="post" action="{{node.type}}/">
-{% csrf_token %}
-Node {{node.type}}
-<a id="{{node.type}}link" target="_blank" href="http://{{node.dns}}/">Link</a><br />
-<button type="submit" id="start_{{node.type}}" name="action" value="start">Start</button>
-<button type="submit" id="stop_{{node.type}}" name="action" value="stop">Stop</button>
+{% ifequal node.type 2 %}
+<td class="serverLabel" valign="top">
+<div class="syncComplete"></div>
+Los Angeles, CA
+</td>
+{% endifequal %}
+<td><div class="serverOn"></div>
+{% ifequal node.type 2 %}
+<td class="serverLabel" valign="top">
+<br/>
+<br/>
+New York, NY
+</td>
+{% endifequal %}
 </form></td>
 {% endfor %}
-</tr></table>
+</tr>
+
+<tr>
+{% for node in nodes %}
+{% ifequal node.type 2 %}
+<div class="serverNYOn"></div>
+</td>
+{% endifequal %}
+
+<td><form method="post" action="{{node.type}}/">
+{% csrf_token %}
+<div id="controlBackground">
+	<button type="submit" id="start_{{node.type}}" class="start" name="action" value="start"></button>
+	<button type="submit" id="stop_{{node.type}}" class="stop"  name="action" value="stop"></button>
 </div>
+<br />
+<img src="{% static "images/Icon_Eye.png" %}"/>
+<a id="{{node.type}}link" class="externalLink" target="_blank" href="http://{{node.dns}}/">Open External View</a>
+</form></td>
+{% ifequal node.type 1 %}
+<td valign="top">
+<div class="serverCAOn"></div>
+{% endifequal %}
+
+{% endfor %}
+</tr>
+
+</table>
+</div>
+<a id="bplink" target="_blank" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/"><h2>Bullet Proof Blog</h2></a>
 
 {% endblock %}

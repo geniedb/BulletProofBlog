@@ -78,15 +78,13 @@ class Node(models.Model):
             self.instance.add_tag(k, v)
 
 class Demo(models.Model):
-    name = models.CharField("Name", max_length=200)
-    organization = models.CharField("Organization", max_length=200)
     email = models.EmailField("E-mail")
     approved = models.DateTimeField("Approved", null=True, blank=True)
     launched = models.DateTimeField("Launched", null=True, blank=True)
     shutdown = models.DateTimeField("Shutdown", null=True, blank=True)
 
     def __unicode__(self):
-        return "{name} ({organization}) <{email}>".format(name=self.name, organization=self.organization, email=self.email)
+        return "Demo {pk} <{email}>".format(pk=self.pk, email=self.email)
 
     def get_dns(self):
         return settings.DNS_TEMPLATE.format(demo_id=self.pk)
@@ -146,7 +144,7 @@ frontend main
         for lb in settings.LOADBALENCERS:
             data = cls.get_haproxy_config(lb)
             h = hmac.new(lb['hmac_key'], data)
-            url = "http://{lb}/?hmac={hmac}".format(lb=lb, hmac=h.hexdigest())
+            url = "http://{lb}/?hmac={hmac}".format(lb=lb['host'], hmac=h.hexdigest())
             urlopen(url, data)
 
     def run_tinc_tailor(self, nodes, commands):

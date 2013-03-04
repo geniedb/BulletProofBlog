@@ -8,7 +8,7 @@ class NodeInline(admin.StackedInline):
 
 class DemoAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields':['name','organization','email']}),
+        (None, {'fields':['email']}),
         ("Status Info", {'fields':['approved','launched','shutdown']}),
     ]
     inlines = [NodeInline]

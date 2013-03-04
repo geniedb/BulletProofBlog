@@ -2,33 +2,41 @@
 {% block headextra %}
 {%if not require_approval %}
 <script type="text/javascript">
-$(function() {
-	$("#go").on("click", function(e) {
-		e.preventDefault();
-		$(this).prop("disabled",true);
-		$(this).val("Launching...");
-		$("#form").submit();
-	});
-});
+    $(function () {
+        $("#go").on("click", function (e) {
+            e.preventDefault();
+            $(this).prop("disabled", true);
+            $(this).val("Launching...");
+            $("#form").submit();
+        });
+    });
 </script>
 {%endif%}
 {% endblock %}
 {% block content %}
-<div class="stylized">
-<form id="form" method="post">
-	<p>Sign up here for a demonstration CloudFabric cluster. You will get a two node cluster for one hour.</p> 
-    {% csrf_token %}
-    <label for="name">Name<span class="small">Your name</span></label>
-    <input id="name" name="name" />
-
-    <label for="organization">Organization<span class="small">The organization you work for</span></label>
-    <input id="organization" name="organization" />
-
-    <label for="email">E-mail<span class="small">An email address we can reach you at</span></label>
-    <input id="email" name="email" />
-    
-    <input id="go" type="submit" value="{%if require_approval %}Request{%else%}Launch{%endif%} Demo">
-	<div class="spacer"></div>
-</form>
+<div class="requestForm">
+    <form id="form" method="post">
+        {% csrf_token %}
+        <div class="intputEmail"><input id="email" name="email" placeholder="Your Email"/></div>
+        <div class="submitButton"><input id="go" type="submit" name="" value=""/></div>
+    </form>
+    <div class="formFooter">To begin, we'll create a dynamic url and email it to you.</div>
+</div>
+<div id="landingDarkPanel">
+    <div id="landingImages">
+        <div id="landingServers"></div>
+        <div id="landingBlog"></div>
+    </div>
+</div>
+<div id="landingMain">
+    <div id="mainCol1">Lorem Ipsum column 1
+    </div>
+    <div id="mainCol2">Lorem Ipsum column 2
+    </div>
+    <div id="sidebar"><span id="landingQuote">
+"Gartner analyst says the biggest concern should not be that data could be compromised in the cloud, but rather that there may be a cloud outage that could lead to data loss." </span><br/><br/><span
+            id="landingQuoteAttr">
+- Network World 11/14/12
+</span></div>
 </div>
 {% endblock %}

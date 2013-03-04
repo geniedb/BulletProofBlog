@@ -14,7 +14,7 @@ logger = getLogger(__name__)
 
 def request(req):
     try:
-        d = Demo(name=req.POST['name'], organization=req.POST['organization'], email=req.POST['email'])
+        d = Demo(email=req.POST['email'])
     except:
         return render(req, 'provision/request.html', {'require_approval': settings.REQUIRE_APPROVAL})
     if settings.REQUIRE_APPROVAL:
