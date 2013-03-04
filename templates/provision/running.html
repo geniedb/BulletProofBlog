@@ -4,76 +4,80 @@
 {% block headextra %}
 <script type="text/javascript">
 function handleJson(info) {
-	$("#"+info.node_id+"link").css('background-color', info.status==0 ? "#CCFFCC" : "#FFCCCC");
+	$("#"+info.node_id+"icon").addClass("server" + (info.status==0 ? "On" : "Off"));
+	$("#"+info.node_id+"icon").removeClass("server" + (info.status==0 ? "Off" : "On"));
+	$("#"+info.node_id+"connection").addClass("server" + info.node_id + (info.status==0 ? "On" : "Off"));
+	$("#"+info.node_id+"connection").removeClass("server" + info.node_id + (info.status==0 ? "Off" : "On"));
 	$("#"+(info.status==0 ? "stop_" : "start_") +info.node_id).show();
 	$("#"+(info.status==0 ? "start_" : "stop_") +info.node_id).hide();
 }
 
 function requestUpdates() {
-{% for node in nodes %}
-	$.getJSON('{{node.type}}/',{format:'json'},handleJson);
-{% endfor %}
+	$.getJSON('0/',{format:'json'},handleJson);
+	$.getJSON('1/',{format:'json'},handleJson);
 }
 
 $(document).ready(function() {
 	window.setInterval(requestUpdates, 10000);
 	requestUpdates();
-{% for node in nodes %}
-	$("#start_{{node.type}}").hide();
-{% endfor %}
+	$("#start_0").hide();
+	$("#start_1").hide();
 });
 </script>
 {% endblock %}
 {% block content %}
 <div id="callToAction"></div>
 <div class="runningServers">
-<table><tr>
-{% for node in nodes %}
-{% ifequal node.type 2 %}
-<td class="serverLabel" valign="top">
-<div class="syncComplete"></div>
-Los Angeles, CA
-</td>
-{% endifequal %}
-<td><div class="serverOn"></div>
-{% ifequal node.type 2 %}
-<td class="serverLabel" valign="top">
-<br/>
-<br/>
-New York, NY
-</td>
-{% endifequal %}
-</form></td>
-{% endfor %}
-</tr>
-
+<table>
 <tr>
-{% for node in nodes %}
-{% ifequal node.type 2 %}
-<div class="serverNYOn"></div>
-</td>
-{% endifequal %}
-
-<td><form method="post" action="{{node.type}}/">
-{% csrf_token %}
-<div id="controlBackground">
-	<button type="submit" id="start_{{node.type}}" class="start" name="action" value="start"></button>
-	<button type="submit" id="stop_{{node.type}}" class="stop"  name="action" value="stop"></button>
-</div>
-<br />
-<img src="{% static "images/Icon_Eye.png" %}"/>
-<a id="{{node.type}}link" class="externalLink" target="_blank" href="http://{{node.dns}}/">Open External View</a>
-</form></td>
-{% ifequal node.type 1 %}
-<td valign="top">
-<div class="serverCAOn"></div>
-{% endifequal %}
-
-{% endfor %}
+	<td class="serverLabel" valign="top">
+		<div id="0icon" class="serverOn"></div>
+		Los Angeles, CA
+	</td>
+	<td>
+		<div class="syncComplete"></div>
+	</td>
+	<td>
+		<div id="1icon" class="serverOn"></div>
+		<td class="serverLabel" valign="top">
+		<br/>
+		<br/>
+		New York, NY
+	</td>
 </tr>
-
+<tr>
+	<td>
+		<form method="post" action="0/">
+		{% csrf_token %}
+			<div id="controlBackground">
+				<button type="submit" id="start_0" class="start" name="action" value="start"></button>
+				<button type="submit" id="stop_0" class="stop"  name="action" value="stop"></button>
+			</div>
+			<br />
+			<img src="{% static "images/Icon_Eye.png" %}"/>
+			<a id="0link" class="externalLink" target="_blank" href="http://{{nodes.0.dns}}/">Open External View</a>
+		</form>
+	</td>
+	<td>
+		<div id="0connection" class="server0On"></div>
+		<div id="1connection" class="server1On"></div>
+	</td>
+	<td>
+		<form method="post" action="1/">
+		{% csrf_token %}
+			<div id="controlBackground">
+				<button type="submit" id="start_1" class="start" name="action" value="start"></button>
+				<button type="submit" id="stop_1" class="stop"  name="action" value="stop"></button>
+			</div>
+			<br />
+			<img src="{% static "images/Icon_Eye.png" %}"/>
+			<a id="1link" class="externalLink" target="_blank" href="http://{{nodes.1.dns}}/">Open External View</a>
+		</form>
+	</td>
+</tr>
 </table>
+
 </div>
-<a id="bplink" target="_blank" href="http://{{demo.pk}}.bulletproofblog.geniedb.com/"><h2>Bullet Proof Blog</h2></a>
+<a id="bplink" target="_blank" href="http://{{demo.get_dns}}/"><h2>Bullet Proof Blog</h2></a>
 
 {% endblock %}
