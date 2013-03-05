@@ -11,6 +11,23 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+	font-family: 'Klavika-Light';
+    src: url("{% static "fonts/Klavika-Light.eot" %}");
+    src: url("{% static "fonts/Klavika-Light.ttf" %}") format('truetype'), url("{% static "fonts/Klavika-Light.svg" %}") format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Klavika-LightItalic';
+    src: url("{% static "fonts/Klavika-LightItalic.eot" %}");
+    src: url("{% static "fonts/Klavika-LightItalic.ttf" %}") format('truetype'), url("{% static "fonts/Klavika-LightItalic.svg" %}") format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+
 
 * {
     font-family: verdana, sans;
@@ -29,7 +46,7 @@ body {
     margin: 0;
 }
 
-p, h1, form, button {
+p, h1, h2, form, button {
     border: 0;
     margin: 0;
     padding: 0;
@@ -41,8 +58,6 @@ p, h1, form, button {
 }
 
 #content {
-    max-width: 1400px;
-
 }
 
 .stylized {
@@ -100,16 +115,11 @@ p, h1, form, button {
     margin: 2px 0 20px 10px;
 }
 
-body {
-    background-image: url("{% static "images/Background_Img.png" %}" );
-    background-color: #EBEBEB;
-    background-repeat: no-repeat;
-}
-
 #headerTop {
     background: url("{% static "images/Header_TransBkg.png" %}" );
     height: 120px;
-    max-width: 1400px;
+	margin:0 auto;
+
 }
 
 #logo {
@@ -129,20 +139,28 @@ body {
     background: url("{% static "images/BulletproofBlog_Title.png" %}" ) no-repeat;
     background-position: center bottom;
     color: FFFFFF;
-    height: 150px;
-    max-width: 1400px;
+	margin-left:50px;
+    height: 144px;
 }
 
 #headerSubTitle {
     background: url("{% static "images/BulletproofBlog_SubHeadline.png" %}" ) no-repeat;
     background-position: center bottom;
-    height: 60px;
-    max-width: 1400px;
+    height: 58px;
+	margin:0 auto;
 }
 
 .requestForm {
-    margin: 40 auto;
+    margin: 30 auto;
     width: 406px;
+	height: 100px;
+}
+#submitted {
+    background: url("{% static "images/Loading_Bkg.png" %}" ) no-repeat;
+    margin: 30 auto;
+    width: 406px;
+	height: 100px;
+	display:none;
 }
 
 div.intputEmail input {
@@ -168,6 +186,7 @@ div.submitButton input {
     margin: 0px;
 }
 
+
 .formFooter {
     font-size: 10px;
     color: white;
@@ -177,16 +196,16 @@ div.submitButton input {
 
 #landingDarkPanel {
     margin-top: 60px;
-    background: url("{% static "images/LandingPage_DarkPanel.jpg" %}" ) repeat-y;
-    max-width: 1400;
-    height: 300;
+    background: url("{% static "images/LandingPage_ServerIllustration_RadialGrad.png" %}" ) no-repeat;
+	background-size:450px 245px;
+	background-color:#353535;
 }
 
 #landingImages {
     margin-left: auto;
     margin-right: auto;
     width: 1020px;
-    height: 294px;
+	height: 245px;
 }
 
 #landingServers {
@@ -194,14 +213,12 @@ div.submitButton input {
     width: 407px;
     height: 188px;
     float: left;
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 #landingBlog {
-    background: url("{% static "images/LandingPage_BlogImg.png" %}" ) no-repeat;
-    width: 597px;
-    height: 294px;
-    float: right;
+	position:relative;
+	top:-50px;
 }
 
 #landingMain {
@@ -210,32 +227,49 @@ div.submitButton input {
     margin-right: auto;
 }
 
-#mainCol1 {
-    float: left;
-    width: 380px;
+#benefits {
+    font-family: "Klavika";
+    font-size: 48px;
+    color: #6a6a6a;
+	background-color:;
+    padding-top: 60px;
+    text-align: left;
 }
 
-#mainCol2 {
+.mainCols {
+	padding-top:60px;
+    font-family: "Klavika-Light";
     float: left;
     width: 380px;
+	text-align:left;
+    color: #6a6a6a;
+	font-size:12pt;
+}
+h2 {
+    color: #6a6a6a;
+	font-size:13.5pt;
+    font-family: "Klavika";
+}
+p {
+    padding-bottom: 30px;
+    font-family: "Klavika-Light";
 }
 
 #sidebar {
-    margin-top: 40px;
-    font-family: "Klavika";
-    font-size: 16px;
-    font-style: italic;
+    font-family: "Klavika-LightItalic";
+    font-size: 14pt;
     float: right;
-    width: 200px;
+    width: 180px;
     color: #6E88C2;
     text-align: right;
+	line-height: 20pt;
 }
 
 #landingQuoteAttr {
-    margin-top: 60px;
-    font-size: 12px;
+    font-size: 11pt;
     font-style: normal;
-    font-weight: bold;
+    font-family: "Klavika";
+	padding-top: 10;
 }
 
 #callToAction {
@@ -283,6 +317,7 @@ a.externalLink {
 	width:400px;
 	text-decoration: none;
 	text-align:right;
+	color:#678ff0;
 }
 
 a.externalLink:hover {
@@ -298,12 +333,17 @@ a.externalLink:hover {
 }
 
 .serverOn {
+	position:relative;
+	top:-10px;
+	
     background: url("{% static "images/Server_On.png" %}" ) no-repeat;
     width: 163px;
     height: 115px;
 }
 
 .serverOff {
+	position:relative;
+	top:-10px;
     background: url("{% static "images/Server_Off.png" %}" ) no-repeat;
     width: 163px;
     height: 115px;
@@ -330,6 +370,8 @@ a.externalLink:hover {
     height: 89px;
 	float:right;
 	margin-right:24px;
+	position:relative;
+	left:-1px;
 }
 
 .server1Off {
@@ -337,6 +379,8 @@ a.externalLink:hover {
     width: 115px;
     height: 89px;
 	margin-right:24px;
+	position:relative;
+	left:-1px;
 }
 
 .syncComplete {
@@ -361,23 +405,250 @@ a.externalLink:hover {
 	font-size:12px;
 }
 
+.centeredContainer {
+	margin:0 auto;
+	max-width:1100;
+	background-image: url("{% static "images/Background_Img.png" %}" );
+    background-repeat: no-repeat;
+	text-align: center;
+}
+
+
+#processingAnimation0{
+	display:none;
+}
+#processingAnimation1{
+	display:none;
+}
+
+#processingAnimation{
+position:absolute;
+margin: 0 50px;
+width:20px;
+height:25px}
+
+.blockG{
+position:absolute;
+background-color:#FFFFFF;
+width:3px;
+height:8px;
+-moz-border-radius:3px 3px 0 0;
+-moz-transform:scale(0.4);
+-moz-animation-name:fadeG;
+-moz-animation-duration:1.04s;
+-moz-animation-iteration-count:infinite;
+-moz-animation-direction:linear;
+-webkit-border-radius:3px 3px 0 0;
+-webkit-transform:scale(0.4);
+-webkit-animation-name:fadeG;
+-webkit-animation-duration:1.04s;
+-webkit-animation-iteration-count:infinite;
+-webkit-animation-direction:linear;
+-ms-border-radius:3px 3px 0 0;
+-ms-transform:scale(0.4);
+-ms-animation-name:fadeG;
+-ms-animation-duration:1.04s;
+-ms-animation-iteration-count:infinite;
+-ms-animation-direction:linear;
+-o-border-radius:3px 3px 0 0;
+-o-transform:scale(0.4);
+-o-animation-name:fadeG;
+-o-animation-duration:1.04s;
+-o-animation-iteration-count:infinite;
+-o-animation-direction:linear;
+border-radius:3px 3px 0 0;
+transform:scale(0.4);
+animation-name:fadeG;
+animation-duration:1.04s;
+animation-iteration-count:infinite;
+animation-direction:linear;
+}
+
+#rotateG_01{
+left:0;
+top:9px;
+-moz-animation-delay:0.39s;
+-moz-transform:rotate(-90deg);
+-webkit-animation-delay:0.39s;
+-webkit-transform:rotate(-90deg);
+-ms-animation-delay:0.39s;
+-ms-transform:rotate(-90deg);
+-o-animation-delay:0.39s;
+-o-transform:rotate(-90deg);
+animation-delay:0.39s;
+transform:rotate(-90deg);
+}
+
+#rotateG_02{
+left:3px;
+top:3px;
+-moz-animation-delay:0.52s;
+-moz-transform:rotate(-45deg);
+-webkit-animation-delay:0.52s;
+-webkit-transform:rotate(-45deg);
+-ms-animation-delay:0.52s;
+-ms-transform:rotate(-45deg);
+-o-animation-delay:0.52s;
+-o-transform:rotate(-45deg);
+animation-delay:0.52s;
+transform:rotate(-45deg);
+}
+
+#rotateG_03{
+left:8px;
+top:1px;
+-moz-animation-delay:0.65s;
+-moz-transform:rotate(0deg);
+-webkit-animation-delay:0.65s;
+-webkit-transform:rotate(0deg);
+-ms-animation-delay:0.65s;
+-ms-transform:rotate(0deg);
+-o-animation-delay:0.65s;
+-o-transform:rotate(0deg);
+animation-delay:0.65s;
+transform:rotate(0deg);
+}
+
+#rotateG_04{
+right:3px;
+top:3px;
+-moz-animation-delay:0.78s;
+-moz-transform:rotate(45deg);
+-webkit-animation-delay:0.78s;
+-webkit-transform:rotate(45deg);
+-ms-animation-delay:0.78s;
+-ms-transform:rotate(45deg);
+-o-animation-delay:0.78s;
+-o-transform:rotate(45deg);
+animation-delay:0.78s;
+transform:rotate(45deg);
+}
+
+#rotateG_05{
+right:0;
+top:9px;
+-moz-animation-delay:0.9099999999999999s;
+-moz-transform:rotate(90deg);
+-webkit-animation-delay:0.9099999999999999s;
+-webkit-transform:rotate(90deg);
+-ms-animation-delay:0.9099999999999999s;
+-ms-transform:rotate(90deg);
+-o-animation-delay:0.9099999999999999s;
+-o-transform:rotate(90deg);
+animation-delay:0.9099999999999999s;
+transform:rotate(90deg);
+}
+
+#rotateG_06{
+right:3px;
+bottom:2px;
+-moz-animation-delay:1.04s;
+-moz-transform:rotate(135deg);
+-webkit-animation-delay:1.04s;
+-webkit-transform:rotate(135deg);
+-ms-animation-delay:1.04s;
+-ms-transform:rotate(135deg);
+-o-animation-delay:1.04s;
+-o-transform:rotate(135deg);
+animation-delay:1.04s;
+transform:rotate(135deg);
+}
+
+#rotateG_07{
+bottom:0;
+left:8px;
+-moz-animation-delay:1.1700000000000002s;
+-moz-transform:rotate(180deg);
+-webkit-animation-delay:1.1700000000000002s;
+-webkit-transform:rotate(180deg);
+-ms-animation-delay:1.1700000000000002s;
+-ms-transform:rotate(180deg);
+-o-animation-delay:1.1700000000000002s;
+-o-transform:rotate(180deg);
+animation-delay:1.1700000000000002s;
+transform:rotate(180deg);
+}
+
+#rotateG_08{
+left:3px;
+bottom:2px;
+-moz-animation-delay:1.3s;
+-moz-transform:rotate(-135deg);
+-webkit-animation-delay:1.3s;
+-webkit-transform:rotate(-135deg);
+-ms-animation-delay:1.3s;
+-ms-transform:rotate(-135deg);
+-o-animation-delay:1.3s;
+-o-transform:rotate(-135deg);
+animation-delay:1.3s;
+transform:rotate(-135deg);
+}
+
+@-moz-keyframes fadeG{
+0%{
+background-color:#e40000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@-webkit-keyframes fadeG{
+0%{
+background-color:#e40000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@-ms-keyframes fadeG{
+0%{
+background-color:#e40000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@-o-keyframes fadeG{
+0%{
+background-color:#e40000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@keyframes fadeG{
+0%{
+background-color:#e40000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+
 </style>
 {% block headextra %}{% endblock %}
 <title>CloudFabric {% block title %}Demo{% endblock %}</title>
 </head>
-<body>
+<body >
+<div class="centeredContainer">
 <div id="headerTop">
     <div id="logo"></div>
     <section id="social">
-        <a rel="nofollow" href="http://www.facebook.com/"><img src="{% static "images/Social_Facebook.png" %}" alt="Facebook" width="20" height="28"></a> <a
-            rel="nofollow" href="http://twitter.com/"><img src="{% static "images/Social_Twitter.png" %}" alt="Twitter" width="30" height="28"></a> <a
-            rel="nofollow" href="http://www.linkedin.com/"><img src="{% static "images/Social_Linkedin.png" %}" alt="LinkedIn" width="30" height="28"></a>
+        <a rel="nofollow" href="https://www.facebook.com/geniedb?fref=ts"><img src="{% static "images/Social_Facebook.png" %}" alt="Facebook" width="20" height="28"></a> <a
+            rel="nofollow" href="https://twitter.com/GenieDB"><img src="{% static "images/Social_Twitter.png" %}" alt="Twitter" width="30" height="28"></a> <a
+            rel="nofollow" href="http://www.linkedin.com/company/478857?trk=tyah"><img src="{% static "images/Social_Linkedin.png" %}" alt="LinkedIn" width="30" height="28"></a>
     </section>
 </div>
 <div id="headerTitle"></div>
 <div id="headerSubTitle"></div>
 <div id="content">
     {% block content %}{% endblock %}
+</div>
 </div>
 </body>
 </html>

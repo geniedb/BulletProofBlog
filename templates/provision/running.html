@@ -12,6 +12,25 @@ function handleJson(info) {
 	$("#"+(info.status==0 ? "start_" : "stop_") +info.node_id).hide();
 }
 
+$(function () {
+    $("#start_0").on("click", function (e) {
+		$("#start_0").hide();
+		$("#processingAnimation0").show();
+    });
+    $("#stop_0").on("click", function (e) {
+		$("#stop_0").hide();
+		$("#processingAnimation0").show();
+    });
+    $("#start_1").on("click", function (e) {
+		$("#start_1").hide();
+		$("#processingAnimation1").show();
+    });
+    $("#stop_1").on("click", function (e) {
+		$("#stop_1").hide();
+		$("#processingAnimation1").show();
+    });
+});
+
 function requestUpdates() {
 	$.getJSON('0/',{format:'json'},handleJson);
 	$.getJSON('1/',{format:'json'},handleJson);
@@ -50,6 +69,18 @@ $(document).ready(function() {
 		<form method="post" action="0/">
 		{% csrf_token %}
 			<div id="controlBackground">
+				<div id="processingAnimation0">
+				<div id="processingAnimation">
+				<div class="blockG" id="rotateG_01">		</div>
+				<div class="blockG" id="rotateG_02">		</div>
+				<div class="blockG" id="rotateG_03">		</div>
+				<div class="blockG" id="rotateG_04">		</div>
+				<div class="blockG" id="rotateG_05">		</div>
+				<div class="blockG" id="rotateG_06">		</div>
+				<div class="blockG" id="rotateG_07">		</div>
+				<div class="blockG" id="rotateG_08">		</div>
+				</div>	
+			</div>	
 				<button type="submit" id="start_0" class="start" name="action" value="start"></button>
 				<button type="submit" id="stop_0" class="stop"  name="action" value="stop"></button>
 			</div>
@@ -63,9 +94,21 @@ $(document).ready(function() {
 		<div id="1connection" class="server1On"></div>
 	</td>
 	<td>
-		<form method="post" action="1/">
+		<form method="post" action="1/" >
 		{% csrf_token %}
 			<div id="controlBackground">
+					<div id="processingAnimation1">
+						<div id="processingAnimation">
+			<div class="blockG" id="rotateG_01">		</div>
+			<div class="blockG" id="rotateG_02">		</div>
+			<div class="blockG" id="rotateG_03">		</div>
+			<div class="blockG" id="rotateG_04">		</div>
+			<div class="blockG" id="rotateG_05">		</div>
+			<div class="blockG" id="rotateG_06">		</div>
+			<div class="blockG" id="rotateG_07">		</div>
+			<div class="blockG" id="rotateG_08">		</div>
+			</div>
+		</div>
 				<button type="submit" id="start_1" class="start" name="action" value="start"></button>
 				<button type="submit" id="stop_1" class="stop"  name="action" value="stop"></button>
 			</div>
