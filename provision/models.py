@@ -206,7 +206,7 @@ frontend main
         self.save()
 
     def launchable(self):
-        return self.status is self.AWAITING_LAUNCH
+        return self.status == self.AWAITING_LAUNCH
 
     def do_launch(self):
         logger.info("%s: launching", self)

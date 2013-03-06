@@ -43,11 +43,11 @@ def demo(req, demo_id):
 
     if d.status in (Demo.SHUTTING_DOWN, Demo.OVER):
         return render(req,'provision/shutdown.html', {'demo': d})
-    elif d.status is Demo.RUNNING:
+    elif d.status == Demo.RUNNING:
         return render(req,'provision/running.html', {'demo': d, 'nodes': d.node_set.all().order_by('type')})
-    elif d.status is Demo.AWAITING_LAUNCH:
+    elif d.status == Demo.AWAITING_LAUNCH:
         return render(req,'provision/launch.html', {'demo': d})
-    elif d.status is Demo.AWAITING_APPROVAL:
+    elif d.status == Demo.AWAITING_APPROVAL:
         return render(req,'provision/awaiting_approval.html', {'demo': d})
     else:
         return HttpResponseServerError("Demo status: %s" %d.get_status_display())
