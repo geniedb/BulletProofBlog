@@ -10,7 +10,7 @@ import boto.ec2
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from django.core.mail import send_mail
+from django.core.mail import send_mail, mail_admins
 from django.core.signing import Signer
 from django.contrib.sites.models import Site
 from tailor.cloudfabric import Cloudfabric
@@ -78,10 +78,31 @@ class Node(models.Model):
             self.instance.add_tag(k, v)
 
 class Demo(models.Model):
+    INITIAL=0
+    AWAITING_APPROVAL=1
+    AWAITING_LAUNCH=2
+    PROVISIONING=3
+    INSTALLING_CF=4
+    CONFIGURING_LB=5
+    RUNNING=6
+    SHUTTING_DOWN=7
+    OVER=8
+    ERROR=1000
+    STATUSES = (
+        (INITIAL, 'not yet started'),
+        (AWAITING_APPROVAL, 'Awaiting approval'),
+        (AWAITING_LAUNCH, 'Ready to launch'),
+        (PROVISIONING, 'Provisioning EC2 instances'),
+        (INSTALLING_CF, 'Installing GenieDB CloudFabric'),
+        (CONFIGURING_LB, 'Configuring load balencers'),
+        (RUNNING, 'running'),
+        (SHUTTING_DOWN, 'shutting down'),
+        (OVER, 'over'),
+        (ERROR, 'An error occured')
+    )
     email = models.EmailField("E-mail")
-    approved = models.DateTimeField("Approved", null=True, blank=True)
+    status = models.IntegerField("Status", choices=STATUSES, default=INITIAL)
     launched = models.DateTimeField("Launched", null=True, blank=True)
-    shutdown = models.DateTimeField("Shutdown", null=True, blank=True)
 
     def __unicode__(self):
         return "Demo {pk} <{email}>".format(pk=self.pk, email=self.email)
@@ -135,8 +156,8 @@ frontend main
     bind    *:80
     default_backend bpb
 """
-        frontends = [d.get_haproxy_frontend(loadbalencer) for d in cls.objects.filter(shutdown__exact=None).exclude(launched__exact=None)]
-        backends = [d.get_haproxy_backend(loadbalencer) for d in cls.objects.filter(shutdown__exact=None).exclude(launched__exact=None)]
+        frontends = [d.get_haproxy_frontend(loadbalencer) for d in cls.objects.filter(status__gt=cls.PROVISIONING, status__lt=cls.SHUTTING_DOWN)]
+        backends = [d.get_haproxy_backend(loadbalencer) for d in cls.objects.filter(status__gt=cls.PROVISIONING, status__lt=cls.SHUTTING_DOWN)]
         return "\n".join([head]+frontends+backends)
 
     @classmethod
@@ -170,14 +191,13 @@ frontend main
             last_res = m(params, properties).run()
         return last_res
 
-    def due_to_shudown(self):
-        return self.launched <= timezone.now() - datetime.timedelta(hours=1)
-
-    def launchable(self):
-        return self.approved is not None and self.launched is None
+    def do_request_approval(self):
+        mail_admins("New Demo Request", "{demo} has requested a demo.".format(demo=self))
+        self.status = self.AWAITING_LAUNCH
+        self.save()
 
     def do_approve(self, email=True):
-        self.approved = timezone.now()
+        self.status = self.AWAITING_LAUNCH
         if email:
             send_mail("CloudFabric Demo Ready",
                   DEMO_MESSAGE.format(domain=Site.objects.get_current().domain, path=self.get_absolute_url()),
@@ -185,34 +205,49 @@ frontend main
                   [self.email])
         self.save()
 
-    def get_ec2_connections(self):
-        return( boto.connect_ec2(), boto.ec2.regions()[4].connect())
+    def launchable(self):
+        return self.status is self.AWAITING_LAUNCH
 
     def do_launch(self):
         logger.info("%s: launching", self)
         self.launched = timezone.now()
-        self.shutdown = None
+        self.status = self.PROVISIONING
+        self.save()
         ec2regions = EC2Regions()
         nodes = [Node(demo=self, type=node_type) for node_type in xrange(len(settings.NODES))]
         [node.do_launch(ec2regions) for node in nodes]
-        self.save()
         logger.debug("%s: provisioned %s", self, ",".join(str(node) for node in nodes))
         while True in (node.pending() for node in nodes):
             sleep(15)
         [node.update({'Name':'bullet-proof-blog', 'Customer':str(self)[:255], 'Demo ID':str(self.pk)}) for node in nodes]
         sleep(30)
         logger.debug("%s: instances running", self)
+        self.status = self.INSTALLING_CF
+        self.save()
         self.run_tinc_tailor(nodes, [(Cloudfabric,['cloudfabric','refresh'])])
         logger.debug("%s: installed cloudfabric", self)
+        self.status = self.CONFIGURING_LB
+        self.save()
         self.__class__.configure_haproxy()
         logger.debug("%s: HAProxy configured", self)
+        self.status = self.RUNNING
+        self.save()
+
+    def demo_info(self):
+        return {
+            'demo_id': self.pk,
+            'demo_url': self.get_absolute_url(),
+            'status_id': self.status,
+            'status': self.get_status_display(),
+            'running_nodes': self.node_set.count()
+        }
 
     def node_info(self, node):
         nodes = self.node_set.all()
         return {
-                'node_id': node.type,
-                'status': self.run_tinc_tailor(nodes, [[Cloudfabric,['cloudfabric', 'status', 'node_{0}'.format(node.type)]]])
-            }
+            'node_id': node.type,
+            'status': self.run_tinc_tailor(nodes, [[Cloudfabric,['cloudfabric', 'status', 'node_{0}'.format(node.type)]]])
+        }
         
 
     def do_start(self, node):
@@ -224,11 +259,17 @@ frontend main
         nodes = self.node_set.all()
         self.run_tinc_tailor(nodes, [[Cloudfabric,['cloudfabric', 'stop', 'node_{0}'.format(node.type)]]])
 
+
+    def due_to_shudown(self):
+        return self.launched <= timezone.now() - datetime.timedelta(hours=1)
+
     def do_shutdown(self):
         logger.info("%s: shutting down", self)
         nodes = self.node_set.all()
-        self.shutdown = timezone.now()
+        self.status = self.SHUTTING_DOWN
+        self.save()
         ec2regions = EC2Regions()
         [node.do_terminate(ec2regions) for node in nodes]
         logger.debug("%s: instances terminated", self)
+        self.status = self.OVER
         self.save()

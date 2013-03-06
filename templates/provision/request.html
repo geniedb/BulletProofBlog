@@ -2,13 +2,32 @@
 {% block headextra %}
 {%if not require_approval %}
 <script type="text/javascript">
+
+url = '';
+
+function handleProgress(data) {
+    if (data.status_id == 6) {
+        window.location.href = data.demo_url;
+    }
+    $("#submitted").text(data.status);
+}
+
+function requestProgress() {
+    $.getJSON(url,{format:'json'},handleProgress);
+}
+
+function handleFirstProgress(data) {
+    url = data.demo_url;
+    window.setInterval(requestProgress, 1000);
+    handleProgress(data);
+}
+
     $(function () {
         $("#go").on("click", function (e) {
             e.preventDefault();
-
-            $("#form").submit();
-			$("#form").hide();
-			$("#submitted").show();
+            $.post("?format=json", $("#form").serialize(), handleFirstProgress, dataType='json');
+            $("#form").hide();
+            $("#submitted").show();
         });
     });
 </script>
@@ -16,7 +35,7 @@
 {% endblock %}
 {% block content %}
 <div class="requestForm">
-    <form id="form" method="post">
+    <form id="form">
         {% csrf_token %}
         <div class="intputEmail"><input id="email" name="email" placeholder="Your Email"/></div>
         <div class="submitButton"><input id="go" type="submit" name="" value=""/></div>

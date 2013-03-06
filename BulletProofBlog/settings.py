@@ -51,6 +51,8 @@ HOSTS_DIR = '/tmp/hosts'
 DNS_TEMPLATE='{demo_id}.bulletproofblog.geniedb.com'
 REQUIRE_APPROVAL=False
 
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -149,7 +151,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'provision',
-    'south'
+    'south',
+    'djcelery'
 )
 
 # A sample logging configuration. The only tangible logging

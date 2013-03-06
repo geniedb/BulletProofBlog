@@ -8,11 +8,10 @@ class NodeInline(admin.StackedInline):
 
 class DemoAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields':['email']}),
-        ("Status Info", {'fields':['approved','launched','shutdown']}),
+        (None, {'fields':['email', 'status']}),
     ]
     inlines = [NodeInline]
-    list_display = ('__unicode__', 'approved','launched','shutdown')
+    list_display = ('__unicode__', 'status')
     actions = ['approve', 'launch', 'shutdown']
 
     def approve(self, request, queryset):
