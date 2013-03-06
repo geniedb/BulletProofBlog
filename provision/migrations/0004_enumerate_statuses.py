@@ -10,19 +10,19 @@ class Migration(DataMigration):
     def forwards(self, orm):
         for demo in orm['provision.Demo'].objects.all():
             if demo.approved is None:
-                demo.status = Demo.AWAITING_APPROVAL
+                demo.status = 1
             elif demo.launched is None:
-                demo.status = Demo.AWAITING_LAUNCH
+                demo.status = 2
             elif demo.shutdown is None:
-                demo.status = Demo.RUNNING
+                demo.status = 6
             else:
-                demo.status = Demo.OVER
+                demo.status = 8
 
     def backwards(self, orm):
         for demo in orm['provision.Demo'].objects.all():
-            if demo.status >= Demo.SHUTTING_DOWN:
+            if demo.status >= 7:
 		demo.shutdown = timezone.now()
-            if demo.status > Demo.AWATING_APPROVAL:
+            if demo.status > 1:
 		demo.approved = timezone.now()
 
     models = {
