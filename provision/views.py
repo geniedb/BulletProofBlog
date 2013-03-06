@@ -76,7 +76,7 @@ def node(req, demo_id, node_type):
 
 def shutdown_old(req):
     # doesn't require perms
-    for d in Demo.objects.filter(shutdown__exact=None, launched__lte=timezone.now() - datetime.timedelta(hours=1)):
+    for d in Demo.objects.filter(status__lt=Demo.SHUTTING_DOWN, launched__lte=timezone.now() - datetime.timedelta(hours=1)):
         try:
             logger.info("%s: shutting down during cleanup", d)
             d.do_shutdown()
