@@ -3,84 +3,106 @@
 {%if not require_approval %}
 <script type="text/javascript">
 
-url = '';
+    url = '';
 
-function handleProgress(data) {
-    if (data.status_id == 6) {
-        window.location.href = data.demo_url;
+    function handleProgress(data) {
+        if (data.status_id == 6) {
+            window.location.href = data.demo_url;
+        }
+        $("#progressLabel").text(data.status);
     }
-    $("#submitted").text(data.status);
-}
 
-function requestProgress() {
-    $.getJSON(url,{format:'json'},handleProgress);
-}
+    function requestProgress() {
+        $.getJSON(url, {format: 'json'}, handleProgress);
+    }
 
-function handleFirstProgress(data) {
-    url = data.demo_url;
-    window.setInterval(requestProgress, 1000);
-    handleProgress(data);
-}
+    function handleFirstProgress(data) {
+        url = data.demo_url;
+        window.setInterval(requestProgress, 1000);
+        handleProgress(data);
+    }
 
     $(function () {
         $("#go").on("click", function (e) {
             e.preventDefault();
-            $.post("?format=json", $("#form").serialize(), handleFirstProgress, dataType='json');
+            $.post("?format=json", $("#form").serialize(), handleFirstProgress, dataType = 'json');
             $("#form").hide();
             $("#submitted").show();
+            $("#processingAnimationRequest").show();
         });
     });
 </script>
 {%endif%}
 {% endblock %}
 {% block content %}
+<div id="headerTitle"></div>
+<div id="headerSubTitle"></div>
 <div class="requestForm">
     <form id="form">
         {% csrf_token %}
         <div class="intputEmail"><input id="email" name="email" placeholder="Your Email"/></div>
         <div class="submitButton"><input id="go" type="submit" name="" value=""/></div>
     </form>
-    <div id="submitted"></div>
-</div>
-<div id="landingDarkPanel">
-    <div id="landingImages">
-        <div id="landingServers"></div>
-		{% load staticfiles %}
-<img id="landingBlog" src="{% static "images/LandingPage_BlogImg.png" %}" />
+    <div id="submitted">
+        <div id="processingAnimationRequest">
+            <div id="processingAnimation">
+                <div class="blockG" id="rotateG_01"></div>
+                <div class="blockG" id="rotateG_02"></div>
+                <div class="blockG" id="rotateG_03"></div>
+                <div class="blockG" id="rotateG_04"></div>
+                <div class="blockG" id="rotateG_05"></div>
+                <div class="blockG" id="rotateG_06"></div>
+                <div class="blockG" id="rotateG_07"></div>
+                <div class="blockG" id="rotateG_08"></div>
+            </div>
+        </div>
+        <div id="progressLabel">1.Loading your Blog</div>
     </div>
 </div>
+<div id="landingDarkPanel">
+    {% load staticfiles %} <img id="landingBlog" src="{% static 'images/LandingPage_Instructions.png' %}"/>
+</div>
+</div>
 <div id="landingMain">
-	<div id="benefits">The benefits of GenieDB</div>
-    <div class="mainCols">	
+    <div id="benefits">The benefits of GenieDB</div>
+    <div class="mainCols">
 
-		<h2>No Downtime</h2>
-		<p>The self healing architecture provides ultra-availability (>99.999% uptime) with no single point of failure - server, network or cloud.</p>
+        <h2>No Downtime</h2>
 
-		<h2>Scale Without Change</h2>
-		<p>GenieDB scales MySQL transparently over wide areas without the cost and expense of switching to NoSQL. GenieDB installation and configuration is as simple as using any other MySQL storage engine. It's that easy.</p>
+        <p>The self healing architecture provides ultra-availability (>99.999% uptime) with no single point of failure - server, network or cloud.</p>
 
-		<h2>Improve performance and experience to users wherever they are located</h2>		
-		<p>GenieDB distributes data close to remote users in order to improve availability and responsiveness.</p>
+        <h2>Scale Without Change</h2>
 
-		<h2>Achieve higher ROIs for worldwide deployments</h2>
-		<p>GenieDB is easy to install and manage.  It dramatically reduces the complexity, time and cost to design, implement and manage a geographically diverse ultra-available solution.</p>
+        <p>GenieDB scales MySQL transparently over wide areas without the cost and expense of switching to NoSQL. GenieDB installation and configuration is as simple as using any other MySQL storage engine. It's that easy.</p>
+
+        <h2>Improve performance and experience to users wherever they are located</h2>
+
+        <p>GenieDB distributes data close to remote users in order to improve availability and responsiveness.</p>
+
+        <h2>Achieve higher ROIs for worldwide deployments</h2>
+
+        <p>GenieDB is easy to install and manage. It dramatically reduces the complexity, time and cost to design, implement and manage a geographically diverse ultra-available solution.</p>
 
     </div>
     <div class="mainCols">
-		<h2>MySQL + CMS Solutions</h2>
-		<p>GenieDB works seamlessly with the most commonly used CMS solutions, including WordPress, Joomla and Drupal, protecting your website from cloud or datacenter outages, while avoiding the pain of difficult migration or complex administration.</p>
-		<p>
-			<img src="{% static "images/Benefits_CMS_Logos.png" %}" />
-		</p>
+        <h2>MySQL + CMS Solutions</h2>
 
-		<h2>Geo-Distributed Replication </h2>
-		<p>Your MySQL app has grown into a mission critical part of your business. Now protect your application from datacenter or cloud outages, by distributing your database seamlessly across geographically distributed regions or clouds.</p>
+        <p>GenieDB works seamlessly with the most commonly used CMS solutions, including WordPress, Joomla and Drupal, protecting your website from cloud or datacenter outages, while avoiding the pain of difficult migration or complex administration.</p>
 
-		<h2>Eliminate cloud vendor lock-in</h2>
-		<p>GenieDB is portable and runs on public, private or hybrid clouds allowing you  to easily move or add nodes to take advantage of cloud features and pricing.</p>
+        <p>
+            <img src="{% static 'images/Benefits_CMS_Logos.png' %}"/>
+        </p>
+
+        <h2>Geo-Distributed Replication </h2>
+
+        <p>Your MySQL app has grown into a mission critical part of your business. Now protect your application from datacenter or cloud outages, by distributing your database seamlessly across geographically distributed regions or clouds.</p>
+
+        <h2>Eliminate cloud vendor lock-in</h2>
+
+        <p>GenieDB is portable and runs on public, private or hybrid clouds allowing you to easily move or add nodes to take advantage of cloud features and pricing.</p>
     </div>
     <div id="sidebar">
-"Gartner analyst says the biggest concern should not be that data could be compromised in the cloud, but rather that there may be a cloud outage that could lead to data loss." 
-<p id="landingQuoteAttr">- Network World 11/14/12</p></div>
+        "Gartner analyst says the biggest concern should not be that data could be compromised in the cloud, but rather that there may be a cloud outage that could lead to data loss."
+        <p id="landingQuoteAttr">- Network World 11/14/12</p></div>
 </div>
 {% endblock %}

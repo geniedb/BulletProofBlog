@@ -3,124 +3,239 @@
 
 {% block headextra %}
 <script type="text/javascript">
-function handleJson(info) {
-	$("#"+info.node_id+"icon").addClass("server" + (info.status==0 ? "On" : "Off"));
-	$("#"+info.node_id+"icon").removeClass("server" + (info.status==0 ? "Off" : "On"));
-	$("#"+info.node_id+"connection").addClass("server" + info.node_id + (info.status==0 ? "On" : "Off"));
-	$("#"+info.node_id+"connection").removeClass("server" + info.node_id + (info.status==0 ? "Off" : "On"));
-	$("#"+(info.status==0 ? "stop_" : "start_") +info.node_id).show();
-	$("#"+(info.status==0 ? "start_" : "stop_") +info.node_id).hide();
-}
+    var node0 = {'node_id': 0, 'status': 0};
+    var node1 = {'node_id': 1, 'status': 0};
+    function handleJson(info) {
+        $("#" + info.node_id + "icon").addClass("server" + (info.status == 0 ? "On" : "Off"));
+        $("#" + info.node_id + "icon").removeClass("server" + (info.status == 0 ? "Off" : "On"));
+        $("#connection" + info.node_id).addClass("server" + info.node_id + (info.status == 0 ? "On" : "Off"));
+        $("#connection" + info.node_id).removeClass("server" + info.node_id + (info.status == 0 ? "Off" : "On"));
+        $("#" + (info.status == 0 ? "stop_" : "start_") + info.node_id).show();
+        $("#" + (info.status == 0 ? "start_" : "stop_") + info.node_id).hide();
+        $("#serverProcessing" + info.node_id).hide();
+        if (info.node_id == 0) {
+            node0 = info;
+        } else {
+            node1 = info;
+        }
+        updateSyncStatus();
+    }
 
-$(function () {
-    $("#start_0").on("click", function (e) {
-		$("#start_0").hide();
-		$("#processingAnimation0").show();
-    });
-    $("#stop_0").on("click", function (e) {
-		$("#stop_0").hide();
-		$("#processingAnimation0").show();
-    });
-    $("#start_1").on("click", function (e) {
-		$("#start_1").hide();
-		$("#processingAnimation1").show();
-    });
-    $("#stop_1").on("click", function (e) {
-		$("#stop_1").hide();
-		$("#processingAnimation1").show();
-    });
-});
 
-function requestUpdates() {
-	$.getJSON('0/',{format:'json'},handleJson);
-	$.getJSON('1/',{format:'json'},handleJson);
-}
+    $(function () {
+        $("#start_0").on("click", function (e) {
+            updateServerButtons(0, false);
+            e.preventDefault();
+        });
+        $("#stop_0").on("click", function (e) {
+            updateServerButtons(0, true);
+            e.preventDefault();
+        });
+        $("#start_1").on("click", function (e) {
+            updateServerButtons(1, false);
+            e.preventDefault();
+            if (currentStep == 5) {
+                nextStep();
+            }
+        });
+        $("#stop_1").on("click", function (e) {
+            updateServerButtons(1, true);
+            e.preventDefault();
+            if (currentStep == 2) {
+                nextStep();
+            }
+        });
 
-$(document).ready(function() {
-	window.setInterval(requestUpdates, 10000);
-	requestUpdates();
-	$("#start_0").hide();
-	$("#start_1").hide();
-});
+        updateSyncStatus();
+        nextStep();
+    });
+
+    function updateSyncStatus() {
+        var syncCompleted = node0.status + node1.status == 0;
+
+        $("#syncStatus").removeClass(!syncCompleted ? "syncCompleted" : "syncStopped");
+        $("#syncStatus").addClass(syncCompleted ? "syncCompleted" : "syncStopped");
+
+    }
+
+    function updateServerButtons(node, stopping) {
+        $("#stop_" + node).hide();
+        $("#processingAnimation" + node).show();
+        $("#serverProcessing" + node).removeClass(!stopping ? "serverStopping" : "serverStarting");
+        $("#serverProcessing" + node).addClass(stopping ? "serverStopping" : "serverStarting");
+        $("#serverProcessing" + node).show();
+    }
+
+    function requestUpdates() {
+//        $.getJSON('0/', {format: 'json'}, handleJson);
+//        $.getJSON('1/', {format: 'json'}, handleJson);
+    }
+
+    $(document).ready(function () {
+        window.setInterval(requestUpdates, 10000);
+        requestUpdates();
+        $("#start_0").hide();
+        $("#start_1").hide();
+    });
+
+    function disableServerButtons(server, disabled) {
+        $("#start_" + server).attr("disabled", disabled);
+        $("#stop_" + server).attr("disabled", disabled);
+    }
+
+    var currentStep = 0;
+    function step1() {
+        disableServerButtons(0, true);
+        disableServerButtons(1, true);
+        currentStep = 1;
+        $("#guidance1").show();
+    }
+
+    function step2() {
+        disableServerButtons(0, true);
+        disableServerButtons(1, false);
+        currentStep = 2;
+        $("#guidance2").show();
+    }
+    function step3() {
+        disableServerButtons(0, true);
+        disableServerButtons(1, true);
+        currentStep = 3;
+        $("#guidance3a").show();
+        $("#guidance3b").show();
+    }
+    function step4() {
+        disableServerButtons(0, true);
+        disableServerButtons(1, true);
+        currentStep = 4;
+        $("#guidance4").show();
+    }
+    function step5() {
+        disableServerButtons(0, true);
+        disableServerButtons(1, false);
+        currentStep = 5;
+        $("#guidance5").show();
+    }
+    function step6() {
+        disableServerButtons(0, true);
+        disableServerButtons(1, true);
+        currentStep = 6;
+        $("#guidance6a").show();
+        $("#guidance6b").show();
+    }
+    function step7() {
+        disableServerButtons(0, false);
+        disableServerButtons(1, false);
+        currentStep = 7;
+    }
+
+    function blogCommentPosted() {
+        if (currentStep == 4) {
+            step5();
+        }
+    }
+
+    function nextStep() {
+        $("#guidance1").hide();
+        $("#guidance2").hide();
+        $("#guidance3a").hide();
+        $("#guidance3b").hide();
+        $("#guidance4").hide();
+        $("#guidance5").hide();
+        $("#guidance6a").hide();
+        $("#guidance6b").hide();
+        window['step' + (currentStep + 1)].apply();
+    }
 </script>
+
+
+<style type="text/css">
+    .centeredContainer {
+        background: url("{% static 'images/DemoPage_Bkg.png' %}") no-repeat;
+    }
+
+    #content {
+        height: 800px;
+    }
+
+    body {
+        background-color: #ebebeb;
+    }
+
+</style>
+
+
 {% endblock %}
 {% block content %}
-<div id="callToAction"></div>
+<div id="callToAction" onclick="nextStep()"></div>
 <div class="runningServers">
-<table>
-<tr>
-	<td class="serverLabel" valign="top">
-		<div id="0icon" class="serverOn"></div>
-		Los Angeles, CA
-	</td>
-	<td>
-		<div class="syncComplete"></div>
-	</td>
-	<td>
-		<div id="1icon" class="serverOn"></div>
-		<td class="serverLabel" valign="top">
-		<br/>
-		<br/>
-		New York, NY
-	</td>
-</tr>
-<tr>
-	<td>
-		<form method="post" action="0/">
-		{% csrf_token %}
-			<div id="controlBackground">
-				<div id="processingAnimation0">
-				<div id="processingAnimation">
-				<div class="blockG" id="rotateG_01">		</div>
-				<div class="blockG" id="rotateG_02">		</div>
-				<div class="blockG" id="rotateG_03">		</div>
-				<div class="blockG" id="rotateG_04">		</div>
-				<div class="blockG" id="rotateG_05">		</div>
-				<div class="blockG" id="rotateG_06">		</div>
-				<div class="blockG" id="rotateG_07">		</div>
-				<div class="blockG" id="rotateG_08">		</div>
-				</div>	
-			</div>	
-				<button type="submit" id="start_0" class="start" name="action" value="start"></button>
-				<button type="submit" id="stop_0" class="stop"  name="action" value="stop"></button>
-			</div>
-			<br />
-			<img src="{% static "images/Icon_Eye.png" %}"/>
-			<a id="0link" class="externalLink" target="_blank" href="http://{{nodes.0.dns}}/">Open External View</a>
-		</form>
-	</td>
-	<td>
-		<div id="0connection" class="server0On"></div>
-		<div id="1connection" class="server1On"></div>
-	</td>
-	<td>
-		<form method="post" action="1/" >
-		{% csrf_token %}
-			<div id="controlBackground">
-					<div id="processingAnimation1">
-						<div id="processingAnimation">
-			<div class="blockG" id="rotateG_01">		</div>
-			<div class="blockG" id="rotateG_02">		</div>
-			<div class="blockG" id="rotateG_03">		</div>
-			<div class="blockG" id="rotateG_04">		</div>
-			<div class="blockG" id="rotateG_05">		</div>
-			<div class="blockG" id="rotateG_06">		</div>
-			<div class="blockG" id="rotateG_07">		</div>
-			<div class="blockG" id="rotateG_08">		</div>
-			</div>
-		</div>
-				<button type="submit" id="start_1" class="start" name="action" value="start"></button>
-				<button type="submit" id="stop_1" class="stop"  name="action" value="stop"></button>
-			</div>
-			<br />
-			<img src="{% static "images/Icon_Eye.png" %}"/>
-			<a id="1link" class="externalLink" target="_blank" href="http://{{nodes.1.dns}}/">Open External View</a>
-		</form>
-	</td>
-</tr>
-</table>
+    <div id="syncStatus"></div>
+
+    <div id="serverIcon0" class="serverOn"></div>
+    <div id="serverIcon1" class="serverOn"></div>
+
+    <div id="guidance1"></div>
+    <div id="guidance2"></div>
+    <div id="guidance3a"></div>
+    <div id="guidance3b"></div>
+    <div id="guidance4"></div>
+    <div id="guidance5"></div>
+    <div id="guidance6a"></div>
+    <div id="guidance6b"></div>
+
+
+    <form method="post" action="0/">
+        {% csrf_token %}
+        <div id="controlServer0" class="controlBackground">
+            <div id="serverProcessing0"></div>
+            <div id="processingAnimation0" class="animationContainer">
+                <div id="processingAnimation">
+                    <div class="blockG" id="rotateG_01"></div>
+                    <div class="blockG" id="rotateG_02"></div>
+                    <div class="blockG" id="rotateG_03"></div>
+                    <div class="blockG" id="rotateG_04"></div>
+                    <div class="blockG" id="rotateG_05"></div>
+                    <div class="blockG" id="rotateG_06"></div>
+                    <div class="blockG" id="rotateG_07"></div>
+                    <div class="blockG" id="rotateG_08"></div>
+                </div>
+            </div>
+            <button type="submit" id="start_0" class="start" name="action" value="start"></button>
+            <button type="submit" id="stop_0" class="stop" name="action" value="stop"></button>
+        </div>
+    </form>
+    <a id="linkServer0" class="externalLink" target="_blank" href="http://{{nodes.0.dns}}/">Open In New Window</a>
+
+    <div id="connection0" class="server0On"></div>
+    <div id="connection1" class="server1On"></div>
+
+    <form method="post" action="1/">
+        {% csrf_token %}
+        <div id="controlServer1" class="controlBackground">
+            <div id="serverProcessing1"></div>
+            <div id="processingAnimation1" class="animationContainer">
+                <div id="processingAnimation">
+                    <div class="blockG" id="rotateG_01"></div>
+                    <div class="blockG" id="rotateG_02"></div>
+                    <div class="blockG" id="rotateG_03"></div>
+                    <div class="blockG" id="rotateG_04"></div>
+                    <div class="blockG" id="rotateG_05"></div>
+                    <div class="blockG" id="rotateG_06"></div>
+                    <div class="blockG" id="rotateG_07"></div>
+                    <div class="blockG" id="rotateG_08"></div>
+                </div>
+            </div>
+            <button type="submit" id="start_1" class="start" name="action" value="start"></button>
+            <button type="submit" id="stop_1" class="stop" name="action" value="stop"></button>
+        </div>
+    </form>
+    <a id="linkServer1" class="externalLink" target="_blank" href="http://{{nodes.1.dns}}/">Open In New Window</a>
 
 </div>
-<a id="bplink" target="_blank" href="http://{{demo.get_dns}}/"><h2>Bullet Proof Blog</h2></a>
+<div id="blogFrame">
+    <div id="frameHeader"></div>
+    <iframe src="http://{{demo.get_dns}}/" height="480" width="956">Loading Content</iframe>
+</div>
+
 
 {% endblock %}

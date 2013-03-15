@@ -1,41 +1,41 @@
 {% load staticfiles %}
 <html>
 <head>
-<link rel="shortcut icon" href="data:image/ico;base64,AAABAAEAICAQAAEABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAEADgoGAB0UEgA0IxsAXDstAIZYQwCfX0cAl2pYAL5/ZADehmIA8ZVuAOaXdwDsp4oA/KiDAP+6mAAAAAAAAAAAABAQEQAQAAAAAAEAARAQEBAAAQABAQEBAQAQEAAAAAAAABAAAQAAAAABEAABEREREREBEQABERERAAAQABAAAAAAAAAAAQAAAAAAEAEAAAAAAREQAQAAAAABEAAABmZmZmZBEBAAZmZmZmQgERqpqZqamYEBAKmpmqmZqRAKkyIiI2qZEAGpMSIhNZlgCqMAAAAEmkEAqhEQEQFpoRqjARARAIqAEaogAAABKqMKowAAABFLkAG6EAAQAAqzGqMBABAAOpAA2hEREBEaoxqzABEBETuxAasgAAABSrEdswEQAAA6sAC9EAAAEbuBDdMAABARPbAB2oiIiL29MA3TAAEQED2wENzd3b3d1AAd0wEAAQE8sAHdIRERKN0gHsMQAAAAPbAQ7REBAAC8UQ7TAQERET3AAd4gEAEQfIAO4wABAABNwADuEQARAE3ADuMREQAAjsER7iAQEAFesA7jEAAABO1QAO4RAREBznAO4wEBEl7sAQDuIBEBJ+5ADu7u7u7uwgEB7u7u7u7oAQ7MzMzMcwAAAMzMzMzIIAABAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAEREREREREREREREREREREQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="/>
+<link rel="shortcut icon"
+      href="data:image/ico;base64,AAABAAEAICAQAAEABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAEADgoGAB0UEgA0IxsAXDstAIZYQwCfX0cAl2pYAL5/ZADehmIA8ZVuAOaXdwDsp4oA/KiDAP+6mAAAAAAAAAAAABAQEQAQAAAAAAEAARAQEBAAAQABAQEBAQAQEAAAAAAAABAAAQAAAAABEAABEREREREBEQABERERAAAQABAAAAAAAAAAAQAAAAAAEAEAAAAAAREQAQAAAAABEAAABmZmZmZBEBAAZmZmZmQgERqpqZqamYEBAKmpmqmZqRAKkyIiI2qZEAGpMSIhNZlgCqMAAAAEmkEAqhEQEQFpoRqjARARAIqAEaogAAABKqMKowAAABFLkAG6EAAQAAqzGqMBABAAOpAA2hEREBEaoxqzABEBETuxAasgAAABSrEdswEQAAA6sAC9EAAAEbuBDdMAABARPbAB2oiIiL29MA3TAAEQED2wENzd3b3d1AAd0wEAAQE8sAHdIRERKN0gHsMQAAAAPbAQ7REBAAC8UQ7TAQERET3AAd4gEAEQfIAO4wABAABNwADuEQARAE3ADuMREQAAjsER7iAQEAFesA7jEAAABO1QAO4RAREBznAO4wEBEl7sAQDuIBEBJ+5ADu7u7u7uwgEB7u7u7u7oAQ7MzMzMcwAAAMzMzMzIIAABAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAEREREREREREREREREREREQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="/>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
 <style type="text/css">
 @font-face {
     font-family: 'Klavika';
-    src: url("{% static "fonts/Klavika-Regular.eot" %}");
-    src: url("{% static "fonts/Klavika-Regular.ttf" %}") format('truetype'), url("{% static "fonts/Klavika-Regular.svg" %}") format('svg');
+    src: url("{% static 'fonts/Klavika-Regular.eot' %}");
+    src: url("{% static 'fonts/Klavika-Regular.ttf' %}") format('truetype'), url("{% static 'fonts/Klavika-Regular.svg' %}") format('svg');
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
-	font-family: 'Klavika-Light';
-    src: url("{% static "fonts/Klavika-Light.eot" %}");
-    src: url("{% static "fonts/Klavika-Light.ttf" %}") format('truetype'), url("{% static "fonts/Klavika-Light.svg" %}") format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-family: 'Klavika-LightItalic';
-    src: url("{% static "fonts/Klavika-LightItalic.eot" %}");
-    src: url("{% static "fonts/Klavika-LightItalic.ttf" %}") format('truetype'), url("{% static "fonts/Klavika-LightItalic.svg" %}") format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'Klavika-Light';
+    src: url("{% static 'fonts/Klavika-Light.eot' %}");
+    src: url("{% static 'fonts/Klavika-Light.ttf' %}") format('truetype'), url("{% static 'fonts/Klavika-Light.svg' %}") format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
-
-
+@font-face {
+    font-family: 'Klavika-LightItalic';
+    src: url("{% static 'fonts/Klavika-LightItalic.eot' %}");
+    src: url("{% static 'fonts/Klavika-LightItalic.ttf' %}") format('truetype'), url("{% static 'fonts/Klavika-LightItalic.svg' %}") format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
 
 * {
     font-family: verdana, sans;
 }
 
 h1 {
-    background-color: black;
-    color: white;
+    background-color: #000;
+    color: #fff;
     padding: 10pt;
     vertical-align: middle;
 }
@@ -74,7 +74,7 @@ p, h1, h2, form, button {
 
 .stylized p {
     font-size: 11px;
-    color: #666666;
+    color: #666;
     margin-bottom: 20px;
     border-bottom: solid 1px #b7ddf2;
     padding-bottom: 10px;
@@ -89,7 +89,7 @@ p, h1, h2, form, button {
 }
 
 .stylized .small {
-    color: #666666;
+    color: #666;
     display: block;
     font-size: 11px;
     font-weight: normal;
@@ -116,15 +116,13 @@ p, h1, h2, form, button {
 }
 
 #headerTop {
-    background: url("{% static "images/Header_TransBkg.png" %}" );
+    background: url("{% static 'images/Header_TransBkg.png' %}");
     height: 120px;
-	margin:0 auto;
-
+    margin: 0 auto;
 }
 
 #logo {
-    background: url("{% static "images/GenieDB_Logo.png" %}" ) no-repeat;
-    background-position: 70px 30px;
+    background: url("{% static 'images/GenieDB_Logo.png' %}") no-repeat 70px 30px;
     height: 120px;
     width: 500px;
     float: left;
@@ -136,35 +134,42 @@ p, h1, h2, form, button {
 }
 
 #headerTitle {
-    background: url("{% static "images/BulletproofBlog_Title.png" %}" ) no-repeat;
-    background-position: center bottom;
+    background: url("{% static 'images/BulletproofBlog_Title.png' %}") no-repeat center bottom;
     color: FFFFFF;
-	margin-left:50px;
+    margin-left: 50px;
     height: 144px;
 }
 
 #headerSubTitle {
-    background: url("{% static "images/BulletproofBlog_SubHeadline.png" %}" ) no-repeat;
-    background-position: center bottom;
+    background: url("{% static 'images/BulletproofBlog_SubHeadline.png' %}") no-repeat center bottom;
     height: 58px;
-	margin:0 auto;
+    margin: 0 auto;
+}
+
+#footer {
+    background: url("{% static 'images/PoweredByGenieDB.png' %}") no-repeat center bottom;
+    width: 210px;
+    height: 60px;
+    margin: 0 auto;
+    clear: both;
 }
 
 .requestForm {
     margin: 30 auto;
     width: 406px;
-	height: 100px;
+    height: 100px;
 }
+
 #submitted {
-    background: url("{% static "images/Loading_Bkg.png" %}" ) no-repeat;
+    background: url("{% static 'images/LoadingProgress.png' %}") no-repeat;
     margin: 30 auto;
     width: 406px;
-	height: 100px;
-	display:none;
+    height: 100px;
+    display: none;
 }
 
 div.intputEmail input {
-    background: url("{% static "images/Signup_EmailTextField_Input.png" %}" ) no-repeat;
+    background: url("{% static 'images/Signup_EmailTextField_Input.png' %}") no-repeat;
     cursor: pointer;
     width: 292px;
     height: 50px;
@@ -176,7 +181,7 @@ div.intputEmail input {
 }
 
 div.submitButton input {
-    background: url("{% static "images/Signup_EmailTextField_Btn.png" %}" ) no-repeat;
+    background: url("{% static 'images/Signup_EmailTextField_Btn.png' %}") no-repeat;
     cursor: pointer;
     width: 114px;
     height: 50px;
@@ -185,7 +190,6 @@ div.submitButton input {
     padding: 0px;
     margin: 0px;
 }
-
 
 .formFooter {
     font-size: 10px;
@@ -196,60 +200,53 @@ div.submitButton input {
 
 #landingDarkPanel {
     margin-top: 60px;
-    background: url("{% static "images/LandingPage_ServerIllustration_RadialGrad.png" %}" ) no-repeat;
-	background-size:450px 245px;
-	background-color:#353535;
-}
-
-#landingImages {
-    margin-left: auto;
-    margin-right: auto;
-    width: 1020px;
-	height: 245px;
-}
-
-#landingServers {
-    background: url("{% static "images/LandingPage_ServerIllustration.png" %}" ) no-repeat;
-    width: 407px;
-    height: 188px;
-    float: left;
-    margin-top: 20px;
+    height: 239px;
+    background: #353535 url("{% static 'images/LandingPage_ServerIllustration_RadialGrad.png' %}") no-repeat;
 }
 
 #landingBlog {
-	position:relative;
-	top:-50px;
+    position: relative;
+    top: -70px;
 }
 
 #landingMain {
     width: 960px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
 }
 
 #benefits {
     font-family: "Klavika";
     font-size: 48px;
     color: #6a6a6a;
-	background-color:;
     padding-top: 60px;
     text-align: left;
 }
 
+#progressLabel {
+    font-family: "Klavika";
+    font-size: 18px;
+    color: #fff;
+    text-align: left;
+    padding-left: 75px;
+    padding-top: 15px;
+}
+
 .mainCols {
-	padding-top:60px;
+    padding-top: 60px;
     font-family: "Klavika-Light";
     float: left;
     width: 380px;
-	text-align:left;
+    text-align: left;
     color: #6a6a6a;
-	font-size:12pt;
+    font-size: 12pt;
 }
+
 h2 {
     color: #6a6a6a;
-	font-size:13.5pt;
+    font-size: 13.5pt;
     font-family: "Klavika";
 }
+
 p {
     padding-bottom: 30px;
     font-family: "Klavika-Light";
@@ -262,393 +259,550 @@ p {
     width: 180px;
     color: #6E88C2;
     text-align: right;
-	line-height: 20pt;
+    line-height: 20pt;
 }
 
 #landingQuoteAttr {
     font-size: 11pt;
     font-style: normal;
     font-family: "Klavika";
-	padding-top: 10;
+    padding-top: 10px;
 }
 
-#callToAction {
-    background: url("{% static "images/CallToAction.png" %}" ) no-repeat;
-    width: 352px;
-    height: 50px;
-	margin-top:40px;
-    margin-left: auto;
-    margin-right: auto;
+#blogFrame {
 }
 
-#controlBackground {
-    background: url("{% static "images/Control_Bkg.png" %}" ) no-repeat;
+.controlBackground {
+    background: url("{% static 'images/Control_Bkg.png' %}") no-repeat;
     width: 142px;
     height: 43px;
-	padding:6px;
-	margin-left:10px;
+    position: absolute;
+}
+
+#controlServer0 {
+    left: 390px;
+    top: 120px;
+}
+
+#controlServer1 {
+    left: 990px;
+    top: 70px;
+}
+
+#linkServer0 {
+    position: absolute;
+    left: 110px;
+    top: 180px;
+}
+
+#linkServer1 {
+    position: absolute;
+    left: 710px;
+    top: 130px;
 }
 
 .start {
-    width:  130px;
+    width: 130px;
     height: 31px;
-    display: block;
-    background: url("{% static "images/Control_StartServicesBtn.png" %}" ) no-repeat;
+    margin: 6px auto auto;
+    background: url("{% static 'images/Control_StartServicesBtn.png' %}") no-repeat;
 }
 
 .start:hover {
-    background: url("{% static "images/Control_StartServicesBtn_Over.png" %}" ) no-repeat;
+    background: url("{% static 'images/Control_StartServicesBtn_Over.png' %}") no-repeat;
+}
+
+.start:disabled {
+    background: url("{% static 'images/Control_StartServicesBtn_Over.png' %}") no-repeat;
 }
 
 .stop {
-    width:  130px;
+    width: 130px;
     height: 31px;
-    display: block;
-    background: url("{% static "images/Control_StopServicesBtn.png" %}" ) no-repeat;
+    margin: 6px auto auto;
+    background: url("{% static 'images/Control_StopServicesBtn.png' %}") no-repeat;
 }
 
 .stop:hover {
-    background: url("{% static "images/Control_StopServicesBtn_Over.png" %}" ) no-repeat;
+    background: url("{% static 'images/Control_StopServicesBtn_Over.png' %}") no-repeat;
+}
+
+.stop:disabled {
+    background: url("{% static 'images/Control_StopServicesBtn_Over.png' %}") no-repeat;
 }
 
 a.externalLink {
     cursor: pointer;
     font-size: 12px;
-	width:400px;
-	text-decoration: none;
-	text-align:right;
-	color:#678ff0;
+    width: 400px;
+    text-decoration: none;
+    text-align: right;
+    color: #678ff0;
 }
 
 a.externalLink:hover {
-	text-decoration: underline;
+    text-decoration: underline;
+}
+
+#blogFrame {
+    position: relative;
+    top: -210px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#frameHeader {
+    background: url("{% static 'images/Blog_HeaderBar.png' %}") no-repeat;
+    width: 960px;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .runningServers {
-	margin-top:100;
+    position: relative;
+    margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
-    width: 700px;
+    width: 1400px;
+    height: 400px;
     padding: 14px;
 }
 
-.serverOn {
-	position:relative;
-	top:-10px;
-	
-    background: url("{% static "images/Server_On.png" %}" ) no-repeat;
-    width: 163px;
-    height: 115px;
+.serverOff {
+    width: 51px;
+    height: 47px;
+    position: absolute;
+    background: url("{% static 'images/ServerIcon_Off.png' %}") no-repeat;
 }
 
-.serverOff {
-	position:relative;
-	top:-10px;
-    background: url("{% static "images/Server_Off.png" %}" ) no-repeat;
-    width: 163px;
-    height: 115px;
+.serverOn {
+    width: 51px;
+    height: 47px;
+    position: absolute;
+    background: url("{% static 'images/ServerIcon_On.png' %}") no-repeat;
+}
+
+#serverIcon0 {
+    left: 323px;
+    top: 120px;
+}
+
+#serverIcon1 {
+    left: 922px;
+    top: 80px;
+}
+
+#guidance1 {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step1.png' %}") no-repeat;
+    width: 310px;
+    height: 135px;
+    left: 580px;
+    top: 80px;
+}
+
+#guidance2 {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step2.png' %}") no-repeat;
+    width: 229px;
+    height: 102px;
+    left: 690px;
+    top: 60px;
+}
+
+#guidance3a {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step3a.png' %}") no-repeat;
+    width: 145px;
+    height: 122px;
+    left: 780px;
+    top: 30px;
+}
+
+#guidance3b {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step3b.png' %}") no-repeat;
+    width: 261px;
+    height: 114px;
+    left: 780px;
+    top: 180px;
+    z-index:1000;
+}
+
+#guidance4 {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step4.png' %}") no-repeat;
+    width: 184px;
+    height: 97px;
+    left: 620px;
+    top: 110px;
+}
+
+#guidance5 {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step5.png' %}") no-repeat;
+    width: 175px;
+    height: 102px;
+    left: 750px;
+    top: 40px;
+}
+
+#guidance6a {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step6a.png' %}") no-repeat;
+    width: 309px;
+    height: 122px;
+    left: 600px;
+    top: 40px;
+}
+
+#guidance6b {
+    position: absolute;
+    background: url("{% static 'images/Bubble_Step6b.png' %}") no-repeat;
+    width: 356px;
+    height: 114px;
+    left: 550px;
+    top: 90px;
+}
+
+#connection0 {
+    width: 281px;
+    height: 136px;
+    left: 330px;
+    top: -24px;
+    position: absolute;
 }
 
 .server0On {
-    background: url("{% static "images/ServerStatus_CA_On.png" %}" ) no-repeat;
-    width: 115px;
-    height: 89px;
-	float:left;
-	margin-left:24px;
+    background: url("{% static 'images/Server_West_On.png' %}") no-repeat;
 }
 
 .server0Off {
-    background: url("{% static "images/ServerStatus_CA_Off.png" %}" ) no-repeat;
-    width: 115px;
-    height: 89px;
-	margin-left:24px;
+    background: url("{% static 'images/Server_West_Off.png' %}") no-repeat;
+}
+
+#connection1 {
+    position: absolute;
+    width: 429px;
+    height: 103px;
+    left: 650px;
+    top: -30px;
 }
 
 .server1On {
-    background: url("{% static "images/ServerStatus_NY_On.png" %}" ) no-repeat;
-    width: 115px;
-    height: 89px;
-	float:right;
-	margin-right:24px;
-	position:relative;
-	left:-1px;
+    background: url("{% static 'images/Server_East_On.png' %}") no-repeat;
 }
 
 .server1Off {
-    background: url("{% static "images/ServerStatus_NY_Off.png" %}" ) no-repeat;
-    width: 115px;
-    height: 89px;
-	margin-right:24px;
-	position:relative;
-	left:-1px;
+    position: absolute;
+    background: url("{% static 'images/Server_East_Off.png' %}") no-repeat;
 }
 
-.syncComplete {
-    background: url("{% static "images/Sync_Completed.png" %}" ) no-repeat;
-    width: 278px;
-    height: 30px;
-}
-
-.syncProgress {
-    background: url("{% static "images/Sync_Progress.png" %}" ) no-repeat;
-    width: 278px;
-    height: 30px;
-}
-
-.syncStopped {
-    background: url("{% static "images/Sync_Stopped.png" %}" ) no-repeat;
-    width: 278px;
-    height: 30px;
-}
-
-.serverLabel {
-	font-size:12px;
+#callToAction {
+    position: absolute;
+    background: url("{% static 'images/CallToAction.png' %}") no-repeat;
+    width: 352px;
+    height: 50px;
+    top: 40px;
+    left: 40%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .centeredContainer {
-	margin:0 auto;
-	max-width:1100;
-	background-image: url("{% static "images/Background_Img.png" %}" );
-    background-repeat: no-repeat;
-	text-align: center;
+    margin: 0 auto;
+    max-width: 1400px;
+    background: url("{% static 'images/Background_Img.png' %}") no-repeat;
+    text-align: center;
 }
 
-
-#processingAnimation0{
-	display:none;
-}
-#processingAnimation1{
-	display:none;
-}
-
-#processingAnimation{
-position:absolute;
-margin: 0 50px;
-width:20px;
-height:25px}
-
-.blockG{
-position:absolute;
-background-color:#FFFFFF;
-width:3px;
-height:8px;
--moz-border-radius:3px 3px 0 0;
--moz-transform:scale(0.4);
--moz-animation-name:fadeG;
--moz-animation-duration:1.04s;
--moz-animation-iteration-count:infinite;
--moz-animation-direction:linear;
--webkit-border-radius:3px 3px 0 0;
--webkit-transform:scale(0.4);
--webkit-animation-name:fadeG;
--webkit-animation-duration:1.04s;
--webkit-animation-iteration-count:infinite;
--webkit-animation-direction:linear;
--ms-border-radius:3px 3px 0 0;
--ms-transform:scale(0.4);
--ms-animation-name:fadeG;
--ms-animation-duration:1.04s;
--ms-animation-iteration-count:infinite;
--ms-animation-direction:linear;
--o-border-radius:3px 3px 0 0;
--o-transform:scale(0.4);
--o-animation-name:fadeG;
--o-animation-duration:1.04s;
--o-animation-iteration-count:infinite;
--o-animation-direction:linear;
-border-radius:3px 3px 0 0;
-transform:scale(0.4);
-animation-name:fadeG;
-animation-duration:1.04s;
-animation-iteration-count:infinite;
-animation-direction:linear;
+#processingAnimationRequest {
+    display: none;
+    position: relative;
+    top: 10px;
+    left: -30px;
 }
 
-#rotateG_01{
-left:0;
-top:9px;
--moz-animation-delay:0.39s;
--moz-transform:rotate(-90deg);
--webkit-animation-delay:0.39s;
--webkit-transform:rotate(-90deg);
--ms-animation-delay:0.39s;
--ms-transform:rotate(-90deg);
--o-animation-delay:0.39s;
--o-transform:rotate(-90deg);
-animation-delay:0.39s;
-transform:rotate(-90deg);
+#syncStatus {
+    position: absolute;
+    width: 30px;
+    height: 32px;
+    top: -42px;
+    left: 617px;
 }
 
-#rotateG_02{
-left:3px;
-top:3px;
--moz-animation-delay:0.52s;
--moz-transform:rotate(-45deg);
--webkit-animation-delay:0.52s;
--webkit-transform:rotate(-45deg);
--ms-animation-delay:0.52s;
--ms-transform:rotate(-45deg);
--o-animation-delay:0.52s;
--o-transform:rotate(-45deg);
-animation-delay:0.52s;
-transform:rotate(-45deg);
+.syncCompleted {
+    background: url("{% static 'images/Sync_Completed.png' %}") no-repeat;
 }
 
-#rotateG_03{
-left:8px;
-top:1px;
--moz-animation-delay:0.65s;
--moz-transform:rotate(0deg);
--webkit-animation-delay:0.65s;
--webkit-transform:rotate(0deg);
--ms-animation-delay:0.65s;
--ms-transform:rotate(0deg);
--o-animation-delay:0.65s;
--o-transform:rotate(0deg);
-animation-delay:0.65s;
-transform:rotate(0deg);
+.syncStopped {
+    background: url("{% static 'images/Sync_Stopped.png' %}") no-repeat;
 }
 
-#rotateG_04{
-right:3px;
-top:3px;
--moz-animation-delay:0.78s;
--moz-transform:rotate(45deg);
--webkit-animation-delay:0.78s;
--webkit-transform:rotate(45deg);
--ms-animation-delay:0.78s;
--ms-transform:rotate(45deg);
--o-animation-delay:0.78s;
--o-transform:rotate(45deg);
-animation-delay:0.78s;
-transform:rotate(45deg);
+.serverStopping {
+    position: absolute;
+    background: url("{% static 'images/Control_Stopping.png' %}") no-repeat;
+    width: 130px;
+    height: 31px;
+    top: 6px;
+    left: 6px;
 }
 
-#rotateG_05{
-right:0;
-top:9px;
--moz-animation-delay:0.9099999999999999s;
--moz-transform:rotate(90deg);
--webkit-animation-delay:0.9099999999999999s;
--webkit-transform:rotate(90deg);
--ms-animation-delay:0.9099999999999999s;
--ms-transform:rotate(90deg);
--o-animation-delay:0.9099999999999999s;
--o-transform:rotate(90deg);
-animation-delay:0.9099999999999999s;
-transform:rotate(90deg);
+.serverStarting {
+    position: absolute;
+    background: url("{% static 'images/Control_Starting.png' %}") no-repeat;
+    width: 130px;
+    height: 31px;
+    top: 6px;
+    left: 6px;
 }
 
-#rotateG_06{
-right:3px;
-bottom:2px;
--moz-animation-delay:1.04s;
--moz-transform:rotate(135deg);
--webkit-animation-delay:1.04s;
--webkit-transform:rotate(135deg);
--ms-animation-delay:1.04s;
--ms-transform:rotate(135deg);
--o-animation-delay:1.04s;
--o-transform:rotate(135deg);
-animation-delay:1.04s;
-transform:rotate(135deg);
+.animationContainer {
+    display: none;
+    position: relative;
+    top: 10px;
+    left: -30px;
 }
 
-#rotateG_07{
-bottom:0;
-left:8px;
--moz-animation-delay:1.1700000000000002s;
--moz-transform:rotate(180deg);
--webkit-animation-delay:1.1700000000000002s;
--webkit-transform:rotate(180deg);
--ms-animation-delay:1.1700000000000002s;
--ms-transform:rotate(180deg);
--o-animation-delay:1.1700000000000002s;
--o-transform:rotate(180deg);
-animation-delay:1.1700000000000002s;
-transform:rotate(180deg);
+#processingAnimation {
+    position: absolute;
+    margin: 0 50px;
+    width: 16px;
+    height: 20px
 }
 
-#rotateG_08{
-left:3px;
-bottom:2px;
--moz-animation-delay:1.3s;
--moz-transform:rotate(-135deg);
--webkit-animation-delay:1.3s;
--webkit-transform:rotate(-135deg);
--ms-animation-delay:1.3s;
--ms-transform:rotate(-135deg);
--o-animation-delay:1.3s;
--o-transform:rotate(-135deg);
-animation-delay:1.3s;
-transform:rotate(-135deg);
+.blockG {
+    position: absolute;
+    background-color: #FFFFFF;
+    width: 3px;
+    height: 6px;
+    -moz-border-radius: 3px 3px 0 0;
+    -moz-transform: scale(0.4);
+    -moz-animation-name: fadeG;
+    -moz-animation-duration: 1.04s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-direction: linear;
+    -webkit-border-radius: 3px 3px 0 0;
+    -webkit-transform: scale(0.4);
+    -webkit-animation-name: fadeG;
+    -webkit-animation-duration: 1.04s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: linear;
+    -ms-border-radius: 3px 3px 0 0;
+    -ms-transform: scale(0.4);
+    -ms-animation-name: fadeG;
+    -ms-animation-duration: 1.04s;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-direction: linear;
+    -o-border-radius: 3px 3px 0 0;
+    -o-transform: scale(0.4);
+    -o-animation-name: fadeG;
+    -o-animation-duration: 1.04s;
+    -o-animation-iteration-count: infinite;
+    -o-animation-direction: linear;
+    border-radius: 3px 3px 0 0;
+    transform: scale(0.4);
+    animation-name: fadeG;
+    animation-duration: 1.04s;
+    animation-iteration-count: infinite;
+    animation-direction: linear;
 }
 
-@-moz-keyframes fadeG{
-0%{
-background-color:#e40000}
+#rotateG_01 {
+    left: 0;
+    top: 7px;
+    -moz-animation-delay: 0.39s;
+    -moz-transform: rotate(-90deg);
+    -webkit-animation-delay: 0.39s;
+    -webkit-transform: rotate(-90deg);
+    -ms-animation-delay: 0.39s;
+    -ms-transform: rotate(-90deg);
+    -o-animation-delay: 0.39s;
+    -o-transform: rotate(-90deg);
+    animation-delay: 0.39s;
+    transform: rotate(-90deg);
+}
 
-100%{
-background-color:#FFFFFF}
+#rotateG_02 {
+    left: 2px;
+    top: 3px;
+    -moz-animation-delay: 0.52s;
+    -moz-transform: rotate(-45deg);
+    -webkit-animation-delay: 0.52s;
+    -webkit-transform: rotate(-45deg);
+    -ms-animation-delay: 0.52s;
+    -ms-transform: rotate(-45deg);
+    -o-animation-delay: 0.52s;
+    -o-transform: rotate(-45deg);
+    animation-delay: 0.52s;
+    transform: rotate(-45deg);
+}
+
+#rotateG_03 {
+    left: 7px;
+    top: 1px;
+    -moz-animation-delay: 0.65s;
+    -moz-transform: rotate(0deg);
+    -webkit-animation-delay: 0.65s;
+    -webkit-transform: rotate(0deg);
+    -ms-animation-delay: 0.65s;
+    -ms-transform: rotate(0deg);
+    -o-animation-delay: 0.65s;
+    -o-transform: rotate(0deg);
+    animation-delay: 0.65s;
+    transform: rotate(0deg);
+}
+
+#rotateG_04 {
+    right: 2px;
+    top: 3px;
+    -moz-animation-delay: 0.78s;
+    -moz-transform: rotate(45deg);
+    -webkit-animation-delay: 0.78s;
+    -webkit-transform: rotate(45deg);
+    -ms-animation-delay: 0.78s;
+    -ms-transform: rotate(45deg);
+    -o-animation-delay: 0.78s;
+    -o-transform: rotate(45deg);
+    animation-delay: 0.78s;
+    transform: rotate(45deg);
+}
+
+#rotateG_05 {
+    right: 0;
+    top: 7px;
+    -moz-animation-delay: 0.9099999999999999s;
+    -moz-transform: rotate(90deg);
+    -webkit-animation-delay: 0.9099999999999999s;
+    -webkit-transform: rotate(90deg);
+    -ms-animation-delay: 0.9099999999999999s;
+    -ms-transform: rotate(90deg);
+    -o-animation-delay: 0.9099999999999999s;
+    -o-transform: rotate(90deg);
+    animation-delay: 0.9099999999999999s;
+    transform: rotate(90deg);
+}
+
+#rotateG_06 {
+    right: 2px;
+    bottom: 2px;
+    -moz-animation-delay: 1.04s;
+    -moz-transform: rotate(135deg);
+    -webkit-animation-delay: 1.04s;
+    -webkit-transform: rotate(135deg);
+    -ms-animation-delay: 1.04s;
+    -ms-transform: rotate(135deg);
+    -o-animation-delay: 1.04s;
+    -o-transform: rotate(135deg);
+    animation-delay: 1.04s;
+    transform: rotate(135deg);
+}
+
+#rotateG_07 {
+    bottom: 0;
+    left: 7px;
+    -moz-animation-delay: 1.1700000000000002s;
+    -moz-transform: rotate(180deg);
+    -webkit-animation-delay: 1.1700000000000002s;
+    -webkit-transform: rotate(180deg);
+    -ms-animation-delay: 1.1700000000000002s;
+    -ms-transform: rotate(180deg);
+    -o-animation-delay: 1.1700000000000002s;
+    -o-transform: rotate(180deg);
+    animation-delay: 1.1700000000000002s;
+    transform: rotate(180deg);
+}
+
+#rotateG_08 {
+    left: 2px;
+    bottom: 2px;
+    -moz-animation-delay: 1.3s;
+    -moz-transform: rotate(-135deg);
+    -webkit-animation-delay: 1.3s;
+    -webkit-transform: rotate(-135deg);
+    -ms-animation-delay: 1.3s;
+    -ms-transform: rotate(-135deg);
+    -o-animation-delay: 1.3s;
+    -o-transform: rotate(-135deg);
+    animation-delay: 1.3s;
+    transform: rotate(-135deg);
+}
+
+@-moz-keyframes fadeG {
+    0% {
+        background-color: #3c68a1
+    }
+
+    100% {
+        background-color: #FFFFFF
+    }
 
 }
 
-@-webkit-keyframes fadeG{
-0%{
-background-color:#e40000}
+@-webkit-keyframes fadeG {
+    0% {
+        background-color: #3c68a1
+    }
 
-100%{
-background-color:#FFFFFF}
-
-}
-
-@-ms-keyframes fadeG{
-0%{
-background-color:#e40000}
-
-100%{
-background-color:#FFFFFF}
+    100% {
+        background-color: #FFFFFF
+    }
 
 }
 
-@-o-keyframes fadeG{
-0%{
-background-color:#e40000}
+@-ms-keyframes fadeG {
+    0% {
+        background-color: #3c68a1
+    }
 
-100%{
-background-color:#FFFFFF}
-
-}
-
-@keyframes fadeG{
-0%{
-background-color:#e40000}
-
-100%{
-background-color:#FFFFFF}
+    100% {
+        background-color: #FFFFFF
+    }
 
 }
 
+@-o-keyframes fadeG {
+    0% {
+        background-color: #3c68a1
+    }
 
+    100% {
+        background-color: #FFFFFF
+    }
+
+}
+
+@keyframes fadeG {
+    0% {
+        background-color: #3c68a1
+    }
+
+    100% {
+        background-color: #FFFFFF
+    }
+
+}
 </style>
 {% block headextra %}{% endblock %}
 <title>CloudFabric {% block title %}Demo{% endblock %}</title>
 </head>
-<body >
+<body>
 <div class="centeredContainer">
-<div id="headerTop">
-    <div id="logo"></div>
-    <section id="social">
-        <a rel="nofollow" href="https://www.facebook.com/geniedb?fref=ts"><img src="{% static "images/Social_Facebook.png" %}" alt="Facebook" width="20" height="28"></a> <a
-            rel="nofollow" href="https://twitter.com/GenieDB"><img src="{% static "images/Social_Twitter.png" %}" alt="Twitter" width="30" height="28"></a> <a
-            rel="nofollow" href="http://www.linkedin.com/company/478857?trk=tyah"><img src="{% static "images/Social_Linkedin.png" %}" alt="LinkedIn" width="30" height="28"></a>
-    </section>
-</div>
-<div id="headerTitle"></div>
-<div id="headerSubTitle"></div>
-<div id="content">
-    {% block content %}{% endblock %}
-</div>
+    <div id="headerTop">
+        <div id="logo"></div>
+        <section id="social">
+            <a rel="nofollow" href="https://www.facebook.com/geniedb?fref=ts"><img src="{% static 'images/Social_Facebook.png' %}" alt="Facebook" width="20"
+                                                                                   height="28"></a> <a rel="nofollow" href="https://twitter.com/GenieDB"><img
+                src="{% static 'images/Social_Twitter.png' %}" alt="Twitter" width="30" height="28"></a> <a rel="nofollow"
+                                                                                                            href="http://www.linkedin.com/company/478857?trk=tyah"><img
+                src="{% static 'images/Social_Linkedin.png' %}" alt="LinkedIn" width="30" height="28"></a>
+        </section>
+    </div>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    <div id="footer"></div>
 </div>
 </body>
 </html>
