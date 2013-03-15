@@ -55,7 +55,7 @@ def demo(req, demo_id):
 def node(req, demo_id, node_type):
     demo_id=Signer().unsign(demo_id)
     d = get_object_or_404(Demo, pk=demo_id)
-    if d.status is not Demo.RUNNING:
+    if d.status != Demo.RUNNING:
         return HttpResponseForbidden("Demo not running.")
     n = get_object_or_404(Node, demo=d, type=node_type)
 
