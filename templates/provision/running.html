@@ -26,14 +26,23 @@
         $("#start_0").on("click", function (e) {
             updateServerButtons(0, false);
             e.preventDefault();
+            var formData = $("#form_0").serializeArray();
+            formData.push({action:'start'});
+            $.post("0/?format=json", $.param(formData), handleJson, dataType = 'json');
         });
         $("#stop_0").on("click", function (e) {
             updateServerButtons(0, true);
             e.preventDefault();
+            var formData = $("#form_0").serializeArray();
+            formData.push({action:'stop'});
+            $.post("0/?format=json", $.param(formData), handleJson, dataType = 'json');
         });
         $("#start_1").on("click", function (e) {
             updateServerButtons(1, false);
             e.preventDefault();
+            var formData = $("#form_1").serializeArray();
+            formData.push({action:'start'});
+            $.post("1/?format=json", $.param(formData), handleJson, dataType = 'json');
             if (currentStep == 5) {
                 nextStep();
             }
@@ -41,6 +50,9 @@
         $("#stop_1").on("click", function (e) {
             updateServerButtons(1, true);
             e.preventDefault();
+            var formData = $("#form_1").serializeArray();
+            formData.push({action:'stop'});
+            $.post("1/?format=json", $.param(formData), handleJson, dataType = 'json');
             if (currentStep == 2) {
                 nextStep();
             }
@@ -67,8 +79,8 @@
     }
 
     function requestUpdates() {
-//        $.getJSON('0/', {format: 'json'}, handleJson);
-//        $.getJSON('1/', {format: 'json'}, handleJson);
+        $.getJSON('0/', {format: 'json'}, handleJson);
+        $.getJSON('1/', {format: 'json'}, handleJson);
     }
 
     $(document).ready(function () {
@@ -184,7 +196,7 @@
     <div id="guidance6b"></div>
 
 
-    <form method="post" action="0/">
+    <form id="form_0" method="post" action="0/">
         {% csrf_token %}
         <div id="controlServer0" class="controlBackground">
             <div id="serverProcessing0"></div>
@@ -209,7 +221,7 @@
     <div id="connection0" class="server0On"></div>
     <div id="connection1" class="server1On"></div>
 
-    <form method="post" action="1/">
+    <form id="form_1" method="post" action="1/">
         {% csrf_token %}
         <div id="controlServer1" class="controlBackground">
             <div id="serverProcessing1"></div>

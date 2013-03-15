@@ -59,9 +59,9 @@ def node(req, demo_id, node_type):
         return HttpResponseForbidden("Demo not running.")
     n = get_object_or_404(Node, demo=d, type=node_type)
 
-    if req.method == "GET":
-        return HttpResponse(json.dumps(d.node_info(n)), mimetype="application/json")
-    elif req.method == "POST":
+    if req.method not in ('POST','GET'):
+        return HttpResponseNotAllowed('POST','GET')
+    if req.method == "POST":
         if not req.POST.has_key('action'):
             return HttpResponseForbidden("Invalid action.")
         if req.POST['action'] == "start":
@@ -69,10 +69,11 @@ def node(req, demo_id, node_type):
         elif req.POST['action'] == "stop":
             d.do_stop(n)
         else:
-            return HttpResponseForbidden()
-        return HttpResponseRedirect(d.get_absolute_url())
+            return HttpResponseForbidden("Invalid action.")
+    if req.REQUEST.has_key('format') and req.REQUEST['format'] == 'json':
+        return HttpResponse(json.dumps(d.node_info(n)), mimetype="application/json")
     else:
-        return HttpResponseNotAllowed('POST','GET')
+        return HttpResponseRedirect(d.get_absolute_url())
 
 def shutdown_old(req):
     # doesn't require perms
