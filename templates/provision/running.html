@@ -23,7 +23,7 @@
 
     function doServerAction(node, action) {
         var formData = $("#form_" + node).serializeArray();
-        formData.push({action: action});
+        formData.push({name: 'action', value: action});
         $.post(node + "/?format=json", $.param(formData), handleJson, dataType = 'json');
     }
 
@@ -49,7 +49,7 @@
         $("#stop_1").on("click", function (e) {
             updateServerButtons(1, true);
             e.preventDefault();
-            doServerAction(0,'stop');
+            doServerAction(1,'stop');
             if (currentStep == 2) {
                 nextStep();
             }
