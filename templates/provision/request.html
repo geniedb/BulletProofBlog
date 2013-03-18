@@ -62,47 +62,50 @@
 <div id="landingDarkPanel">
     {% load staticfiles %} <img id="landingBlog" src="{% static 'images/LandingPage_Instructions.png' %}"/>
 </div>
+<div id="landingShadow"></div>
 </div>
-<div id="landingMain">
-    <div id="benefits">The benefits of GenieDB</div>
-    <div class="mainCols">
+<div id="landingContainer">
+    <div id="landingMain">
+        <div id="benefits">The benefits of GenieDB</div>
+        <div class="mainCols">
 
-        <h2>No Downtime</h2>
+            <h2>No Downtime</h2>
 
-        <p>The self healing architecture provides ultra-availability (>99.999% uptime) with no single point of failure - server, network or cloud.</p>
+            <p>The self healing architecture provides ultra-availability (>99.999% uptime) with no single point of failure - server, network or cloud.</p>
 
-        <h2>Scale Without Change</h2>
+            <h2>Scale Without Change</h2>
 
-        <p>GenieDB scales MySQL transparently over wide areas without the cost and expense of switching to NoSQL. GenieDB installation and configuration is as simple as using any other MySQL storage engine. It's that easy.</p>
+            <p>GenieDB scales MySQL transparently over wide areas without the cost and expense of switching to NoSQL. GenieDB installation and configuration is as simple as using any other MySQL storage engine. It's that easy.</p>
 
-        <h2>Improve performance and experience to users wherever they are located</h2>
+            <h2>Improve performance and experience to users wherever they are located</h2>
 
-        <p>GenieDB distributes data close to remote users in order to improve availability and responsiveness.</p>
+            <p>GenieDB distributes data close to remote users in order to improve availability and responsiveness.</p>
 
-        <h2>Achieve higher ROIs for worldwide deployments</h2>
+            <h2>Achieve higher ROIs for worldwide deployments</h2>
 
-        <p>GenieDB is easy to install and manage. It dramatically reduces the complexity, time and cost to design, implement and manage a geographically diverse ultra-available solution.</p>
+            <p>GenieDB is easy to install and manage. It dramatically reduces the complexity, time and cost to design, implement and manage a geographically diverse ultra-available solution.</p>
 
+        </div>
+        <div class="mainCols">
+            <h2>MySQL + CMS Solutions</h2>
+
+            <p>GenieDB works seamlessly with the most commonly used CMS solutions, including WordPress, Joomla and Drupal, protecting your website from cloud or datacenter outages, while avoiding the pain of difficult migration or complex administration.</p>
+
+            <p>
+                <img src="{% static 'images/Benefits_CMS_Logos.png' %}"/>
+            </p>
+
+            <h2>Geo-Distributed Replication </h2>
+
+            <p>Your MySQL app has grown into a mission critical part of your business. Now protect your application from datacenter or cloud outages, by distributing your database seamlessly across geographically distributed regions or clouds.</p>
+
+            <h2>Eliminate cloud vendor lock-in</h2>
+
+            <p>GenieDB is portable and runs on public, private or hybrid clouds allowing you to easily move or add nodes to take advantage of cloud features and pricing.</p>
+        </div>
+        <div id="sidebar">
+            "Gartner analyst says the biggest concern should not be that data could be compromised in the cloud, but rather that there may be a cloud outage that could lead to data loss."
+            <p id="landingQuoteAttr">- Network World 11/14/12</p></div>
     </div>
-    <div class="mainCols">
-        <h2>MySQL + CMS Solutions</h2>
-
-        <p>GenieDB works seamlessly with the most commonly used CMS solutions, including WordPress, Joomla and Drupal, protecting your website from cloud or datacenter outages, while avoiding the pain of difficult migration or complex administration.</p>
-
-        <p>
-            <img src="{% static 'images/Benefits_CMS_Logos.png' %}"/>
-        </p>
-
-        <h2>Geo-Distributed Replication </h2>
-
-        <p>Your MySQL app has grown into a mission critical part of your business. Now protect your application from datacenter or cloud outages, by distributing your database seamlessly across geographically distributed regions or clouds.</p>
-
-        <h2>Eliminate cloud vendor lock-in</h2>
-
-        <p>GenieDB is portable and runs on public, private or hybrid clouds allowing you to easily move or add nodes to take advantage of cloud features and pricing.</p>
-    </div>
-    <div id="sidebar">
-        "Gartner analyst says the biggest concern should not be that data could be compromised in the cloud, but rather that there may be a cloud outage that could lead to data loss."
-        <p id="landingQuoteAttr">- Network World 11/14/12</p></div>
 </div>
 {% endblock %}

@@ -21,28 +21,27 @@
         updateSyncStatus();
     }
 
+    function doServerAction(node, action) {
+        var formData = $("#form_" + node).serializeArray();
+        formData.push({action: action});
+        $.post(node + "/?format=json", $.param(formData), handleJson, dataType = 'json');
+    }
 
     $(function () {
         $("#start_0").on("click", function (e) {
             updateServerButtons(0, false);
             e.preventDefault();
-            var formData = $("#form_0").serializeArray();
-            formData.push({action:'start'});
-            $.post("0/?format=json", $.param(formData), handleJson, dataType = 'json');
+            doServerAction(0,'start');
         });
         $("#stop_0").on("click", function (e) {
             updateServerButtons(0, true);
             e.preventDefault();
-            var formData = $("#form_0").serializeArray();
-            formData.push({action:'stop'});
-            $.post("0/?format=json", $.param(formData), handleJson, dataType = 'json');
+            doServerAction(0,'stop');
         });
         $("#start_1").on("click", function (e) {
             updateServerButtons(1, false);
             e.preventDefault();
-            var formData = $("#form_1").serializeArray();
-            formData.push({action:'start'});
-            $.post("1/?format=json", $.param(formData), handleJson, dataType = 'json');
+            doServerAction(1,'start');
             if (currentStep == 5) {
                 nextStep();
             }
@@ -50,9 +49,7 @@
         $("#stop_1").on("click", function (e) {
             updateServerButtons(1, true);
             e.preventDefault();
-            var formData = $("#form_1").serializeArray();
-            formData.push({action:'stop'});
-            $.post("1/?format=json", $.param(formData), handleJson, dataType = 'json');
+            doServerAction(0,'stop');
             if (currentStep == 2) {
                 nextStep();
             }
@@ -100,40 +97,42 @@
         disableServerButtons(0, true);
         disableServerButtons(1, true);
         currentStep = 1;
-        $("#guidance1").show();
+        $('#guidance1').fadeIn('slow');
     }
 
     function step2() {
         disableServerButtons(0, true);
         disableServerButtons(1, false);
         currentStep = 2;
-        $("#guidance2").show();
+        $('#guidance2').fadeIn('slow');
     }
     function step3() {
         disableServerButtons(0, true);
         disableServerButtons(1, true);
         currentStep = 3;
-        $("#guidance3a").show();
-        $("#guidance3b").show();
+        $('#guidance3a').fadeIn('slow');
+        $('#guidance3b').fadeIn('slow');
+        window.setTimeout(nextStep, 6000);
     }
     function step4() {
         disableServerButtons(0, true);
         disableServerButtons(1, true);
         currentStep = 4;
-        $("#guidance4").show();
+        $('#guidance4').fadeIn('slow');
     }
     function step5() {
         disableServerButtons(0, true);
         disableServerButtons(1, false);
         currentStep = 5;
-        $("#guidance5").show();
+        $('#guidance5').fadeIn('slow');
     }
     function step6() {
         disableServerButtons(0, true);
         disableServerButtons(1, true);
         currentStep = 6;
-        $("#guidance6a").show();
-        $("#guidance6b").show();
+        $('#guidance6a').fadeIn('slow');
+        $('#guidance6b').fadeIn('slow');
+        window.setTimeout(nextStep, 10000);
     }
     function step7() {
         disableServerButtons(0, false);
@@ -142,8 +141,8 @@
     }
 
     function blogCommentPosted() {
-        if (currentStep == 4) {
-            step5();
+        if (currentStep == 1 || currentStep == 4) {
+            nextStep();
         }
     }
 
@@ -158,13 +157,21 @@
         $("#guidance6b").hide();
         window['step' + (currentStep + 1)].apply();
     }
+
+    if (!window.location.href.match(/localhost/gi)) {
+        document.domain = "geniedb.com";
+    }
+
 </script>
 
 
 <style type="text/css">
     .centeredContainer {
-        background: url("{% static 'images/DemoPage_Bkg.png' %}") no-repeat;
+        background: #342644 url("{% static 'images/DemoPage_Bkg.png' %}") no-repeat center top;
+        height: 633px;
+
     }
+
 
     #content {
         height: 800px;
