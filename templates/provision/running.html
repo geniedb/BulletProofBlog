@@ -13,6 +13,7 @@
         $("#" + (info.status == 0 ? "stop_" : "start_") + info.node_id).show();
         $("#" + (info.status == 0 ? "start_" : "stop_") + info.node_id).hide();
         $("#serverProcessing" + info.node_id).hide();
+        $("#processingAnimation" + info.node_id).hide();
         if (info.node_id == 0) {
             node0 = info;
         } else {
@@ -23,7 +24,7 @@
 
     function doServerAction(node, action) {
         var formData = $("#form_" + node).serializeArray();
-        formData.push({name: 'action', value: action});
+	formData.push({name: 'action', value: action});
         $.post(node + "/?format=json", $.param(formData), handleJson, dataType = 'json');
     }
 
@@ -167,9 +168,8 @@
 
 <style type="text/css">
     .centeredContainer {
-        background: #342644 url("{% static 'images/DemoPage_Bkg.png' %}") no-repeat center top;
+        background: #35284c url("{% static 'images/DemoPage_Bkg.png' %}") no-repeat center top;
         height: 633px;
-
     }
 
 
