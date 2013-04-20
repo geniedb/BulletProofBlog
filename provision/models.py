@@ -185,7 +185,7 @@ frontend main
             logger.debug("%s: running tinc-tailor %s", self, " ".join(n))
             params = parser.parse_args(n)
             params.hosts = dict(
-                ('node_{0}'.format(i), {'connect_to':nodes[i].dns}) for i in xrange(len(nodes))
+                ('node_{0}'.format(i), {'connect_to':nodes[i].dns, 'number':i+1}) for i in xrange(len(nodes))
             )
             [x.update(properties) for x in params.hosts.values()]
             last_res = m(params, properties).run()
