@@ -23,14 +23,14 @@ DATABASES = {
 NODES = [
     {
         'REGION': 'us-west-2',
-        'AMI': 'ami-37f56107',
+        'AMI': 'ami-4447d074',
         'KEY_NAME': 'generic-geniedb-demo',
         'SIZE': 'm1.small',
         'SECURITY_GROUPS': ['generic-geniedb-demo'],
     },
     {
         'REGION': 'us-east-1',
-        'AMI': 'ami-14f56d7d',
+        'AMI': 'ami-62ceaf0b',
         'KEY_NAME': 'generic-geniedb-demo',
         'SIZE': 'm1.small',
         'SECURITY_GROUPS': ['generic-geniedb-demo'],
